@@ -14,7 +14,7 @@
   ],
   "env": {
     "NODE_ENV": "production",
-    "MONGO_URI"="mongodb+srv://guptastuti1920:bf4I4UcAc3PZ5Esl@trendtreasure.u7exiy3.mongodb.net/Trendtreasure-Dev",
-    "JWT_SECRET"="457324a7acb26859363703eb0229675ddc4e785c33f4f99b346a46f4d6098dd7"
+    "MONGO_URI": "mongodb+srv://guptastuti1920:bf4I4UcAc3PZ5Esl@trendtreasure.u7exiy3.mongodb.net/Trendtreasure-Dev",
+    "JWT_SECRET": "457324a7acb26859363703eb0229675ddc4e785c33f4f99b346a46f4d6098dd7"
   }
 }
