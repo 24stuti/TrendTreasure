@@ -1,0 +1,106 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff; /* Background color */
+    padding: 20px 20px;
+    color: black; /* Text color */
+  }
+  
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0; /* Light gray border */
+  }
+  
+  .header-top + .header-bottom {
+    border-top: 1px solid #e0e0e0; /* Light gray border */
+  }
+  
+  .logo img {
+    max-width: 140px;
+    padding-right: 70px;
+  }
+  
+  .search-bar {
+    flex: 1;
+    display: flex;
+    margin: 0 20px;
+    position: static;
+  }
+  
+  .search-bar input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-size: 14px;
+  }
+  
+  .search-bar button {
+    position: relative;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: none;
+    background-color: #333; /* Button color */
+    color: white;
+    padding: 0 15px;
+    cursor: pointer;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+  
+  .header-icons {
+    display: flex;
+    gap: 20px;
+    position: static;
+  }
+  
+  .header-icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: black; /* Icon color */
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  .header-bottom {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    padding-right: 70px;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .header-bottom ul {
+    display:flex;
+    list-style:none;
+    padding: 0;
+    margin: 0;
+    gap: 20px;
+    font-size: 20px;
+    text-align: center;
+    position: static;
+    align-items: center;
+  }
+  
+  .header-bottom a {
+    text-decoration: none;
+    color: black; /* Link color */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .header-bottom a:hover {
+    color: #333; /* Slightly darker gray on hover */
+  }
+  
+  

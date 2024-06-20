@@ -42,11 +42,15 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
+
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handleToggle = () => setIsLogin(!isLogin);
+
+
 
   const handleLoginSuccess = (email, role) => {
     console.log('Logged in successfully as', email);
@@ -112,6 +116,9 @@ const Login = () => {
       console.error('Forgot Password Error:', error);
     }
   };
+
+  
+  
 
   return (
     <div className={`login-container ${isLogin ? 'login-active' : 'signup-active'}`}>
