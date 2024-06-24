@@ -22,7 +22,22 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Fetch products by category
+// @route   GET /api/products/category/:category
+// @access  Public
+const getProductsByCategory = asyncHandler(async (req, res) => {
+  const category = req.params.category;
+  const products = await Product.find({ category });
+
+  if (products.length > 0) {
+    res.json(products);
+  } else {
+    res.status(404).json({ message: 'No products found in this category' });
+  }
+});
+
 module.exports = {
   getProducts,
   getProductById,
+  getProductsByCategory
 };
