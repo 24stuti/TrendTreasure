@@ -69,6 +69,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+
 module.exports = {
   getProducts,
   getProductById,

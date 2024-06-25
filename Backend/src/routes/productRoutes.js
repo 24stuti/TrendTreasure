@@ -5,15 +5,15 @@ const {
   getProductById,
   getProductsByCategory,
   addProduct,
-  deleteProduct
+  deleteProduct,
 } = require('../controllers/productController');
 
 const router = express.Router();
 
 router.route('/').get(getProducts);
-router.route('/').post(protect, admin, addProduct);
+router.route('/addProduct').post(protect, admin, addProduct);
 router.route('/:id').get(getProductById);
-router.route('/:id').delete(protect, admin, deleteProduct);
+router.route('/deleteProduct/:id').delete(protect, admin, deleteProduct);
 router.route('/category/:category').get(getProductsByCategory);
 
 module.exports = router;
