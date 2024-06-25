@@ -38,8 +38,19 @@ const Header = () => {
           <div className="header-icon">
             <FontAwesomeIcon icon={faShoppingCart} /> Cart
           </div>
-          <div className="header-icon">
+          <div className="header-icon profile-dropdown">
             <FontAwesomeIcon icon={faUserCircle} /> Profile
+            <div className="profile-dropdown-content">
+              <a href="/profile">Hello, Stuti Gupta</a>
+              <a href="/orders">Orders</a>
+              <a href="/wishlist">Wishlist</a>
+              <a href="/gift-cards">Gift Cards</a>
+              <a href="/contact-us">Contact Us</a>
+              <a href="/coupons">Coupons</a>
+              <a href="/address">Address</a>
+              <a href="/edit-profile">Edit Profile</a>
+              <a href="/logout">Logout</a>
+            </div>
           </div>
         </div>
       </div>

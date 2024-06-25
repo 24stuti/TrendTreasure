@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './login.css';
 
+const config = require('../Config/Constant');
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,7 +90,7 @@ const Login = () => {
     }
     try {
       console.log('Signing up...');
-      await axios.post('http://localhost:5000/api/users/register', { email, password, name });
+      await axios.post( `${config.BASE_URL}users/register`,{ email, password, name });
       await handleLogin();
     } catch (error) {
       setErrors({ signup: error.response?.data?.message || 'An unknown error occurred' });
