@@ -1,0 +1,28 @@
+/* src/components/ProductList.css */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .product-item {
+    text-align: center;
+  }
+  
+  .product-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .product-item h3 {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  
+  .product-item p {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  

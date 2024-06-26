@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './login.css';
 
@@ -12,6 +12,14 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [errors, setErrors] = useState({});
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      verifyToken(token);
+    }
+  }, []);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,22 +52,29 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  
-
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handleToggle = () => setIsLogin(!isLogin);
 
-
-
   const handleLoginSuccess = (email, role) => {
     console.log('Logged in successfully as', email);
+    setIsAuth(true);
     if (role === 'User') {
       window.location.href = '/'; // User dashboard route
     } else {
       window.location.href = '/admin'; // Admin dashboard route
+    }
+  };
+
+  const verifyToken = async (token) => {
+    try {
+      const response = await axios.post(`${config.BASE_URL}users/verify-token`, { token });
+      setIsAuth(response.data.isAuth);
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      setIsAuth(false);
     }
   };
 
@@ -69,7 +84,8 @@ const Login = () => {
     }
     try {
       console.log('Logging in...');
-      const response = await axios.post('http://localhost:5000/api/users/login', { email, password });
+      const response = await axios.post(`${config.BASE_URL}users/login`, { email, password });
+      console.log(response);
       const { token, role } = response.data;
       console.log(token);
       console.log(role);
@@ -90,7 +106,7 @@ const Login = () => {
     }
     try {
       console.log('Signing up...');
-      await axios.post( `${config.BASE_URL}users/register`,{ email, password, name });
+      await axios.post(`${config.BASE_URL}users/register`, { email, password, name });
       await handleLogin();
     } catch (error) {
       setErrors({ signup: error.response?.data?.message || 'An unknown error occurred' });
@@ -109,7 +125,7 @@ const Login = () => {
 
     try {
       console.log('Sending password reset request...');
-      const response = await axios.post('http://localhost:5000/api/users/forgot-password', { email });
+      const response = await axios.post(`${config.BASE_URL}users/forget-password`, { email });
       console.log(response.data);
       setForgotPassword(false);
       setErrors({ success: 'Password reset email sent successfully' });
@@ -119,8 +135,13 @@ const Login = () => {
     }
   };
 
-  
-  
+  if (isAuth) {
+    return (
+      <div>
+        <h2>You are already logged in</h2>
+      </div>
+    );
+  }
 
   return (
     <div className={`login-container ${isLogin ? 'login-active' : 'signup-active'}`}>

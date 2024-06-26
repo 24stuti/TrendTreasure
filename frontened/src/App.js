@@ -8,14 +8,14 @@ import Header from './Components/Header';
 import Profile from './Components/Profile';
 import Admin from './Components/Admin';
 import AddProducts from './Components/AddProducts';
-
-
-
+import Cart from './Components/Cart';
+//import ProductList from './Components/ProductList';
 
 function App() {
   return (
       <>
-      <Admin />
+        <Admin />
+        <Cart />
         <Header />
         <Banner />
         <Categories />
@@ -26,3 +26,5 @@ function App() {
 }
 
 export default App;
+
+

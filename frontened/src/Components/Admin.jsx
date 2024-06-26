@@ -5,13 +5,14 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header.jsx';
 import Footer from './Footer';
 
+const config = require('../Config/Constant');
 
 const Admin = () => {
     const [productName, setProductName] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [productPrice, setProductPrice] = useState('');
     const [productCategory, setProductCategory] = useState('');
-    const [productImageURL, setProductImageURL] = useState('');
+    const [productImage, setProductImage] = useState('');
     const [productInStock, setProductInStock] = useState(false);
 
     const [categoryName, setCategoryName] = useState('');
@@ -24,25 +25,42 @@ const Admin = () => {
     const [updatedProductDescription, setUpdatedProductDescription] = useState('');
     const [updatedProductPrice, setUpdatedProductPrice] = useState('');
     const [updatedProductCategory, setUpdatedProductCategory] = useState('');
-    const [updatedProductImageURL, setUpdatedProductImageURL] = useState('');
+    const [updatedProductImage, setUpdatedProductImage] = useState('');
     const [updatedProductInStock, setUpdatedProductInStock] = useState(false);
 
     const [categoryIdToGetProducts, setCategoryIdToGetProducts] = useState('');
 
+    const handleImageUpload = (e, setImage) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImage(reader.result);
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const getToken = () => {
+        return localStorage.getItem('token');
+    };
+
     const handleAddProduct = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/product/', {
+            console.log(productImage);
+            const response = await fetch(`${config.BASE_URL}products/addProduct`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: JSON.stringify({
                     name: productName,
                     description: productDescription,
                     price: productPrice,
                     category: productCategory,
-                    imageUrl: productImageURL,
-                    categoryName: productCategory // assuming categoryName is the same as category for now
+                    image: productImage,
+                    inStock: productInStock
                 })
             });
             if (response.ok) {
@@ -58,12 +76,13 @@ const Admin = () => {
         }
     };
 
-    const handleAddCategory = async () => {
+    /* const handleAddCategory = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/category/', {
+            const response = await fetch(`/api/categories/${categoryIdToPost}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: JSON.stringify({
                     name: categoryName,
@@ -86,7 +105,10 @@ const Admin = () => {
     const handleDeleteCategory = async () => {
         try {
             const response = await fetch(`/api/categories/${categoryIdToDelete}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`
+                }
             });
             if (response.ok) {
                 // Category deleted successfully
@@ -106,7 +128,8 @@ const Admin = () => {
             const response = await fetch(`http://localhost:5000/api/product/`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: JSON.stringify({
                     productId: productIdToUpdate,
@@ -114,8 +137,8 @@ const Admin = () => {
                     description: updatedProductDescription,
                     price: updatedProductPrice,
                     category: updatedProductCategory,
-                    imageUrl: updatedProductImageURL,
-                    categoryName: updatedProductCategory // assuming categoryName is the same as category for now
+                    image: updatedProductImage,
+                    inStock: updatedProductInStock
                 })
             });
             if (response.ok) {
@@ -130,10 +153,15 @@ const Admin = () => {
             console.error('Error updating product:', error);
         }
     };
+    */
 
     const handleGetProductsByCategory = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/category/${categoryIdToGetProducts}`);
+            const response = await fetch(`/api/category/${categoryIdToGetProducts}`, {
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            });
             if (response.ok) {
                 const data = await response.json();
                 // Handle received products data
@@ -156,27 +184,23 @@ const Admin = () => {
                     <input type="text" placeholder="Product Description" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} />
                     <input type="number" placeholder="Product Price" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
                     <input type="text" placeholder="Product Category" value={productCategory} onChange={(e) => setProductCategory(e.target.value)} />
-                    <input type="text" placeholder="Product Image URL" value={productImageURL} onChange={(e) => setProductImageURL(e.target.value)} />
+                    <input type="file" onChange={(e) => handleImageUpload(e, setProductImage)} />
                     <label htmlFor="instock">In Stock: </label>
                     <input type="checkbox" id="instock" checked={productInStock} onChange={(e) => setProductInStock(e.target.checked)} />
-                    <button onClick={handleAddProduct}><i className="fas fa-plus"></i> Add Product</button>
+                    <button onClick={handleAddProduct}><FontAwesomeIcon icon={faPlus} /> Add Product</button>
                 </div>
-                <div className="crud-column">
-                    <input type="text" placeholder="Category Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
-                    <input type="text" placeholder="Category Description" value={categoryDescription} onChange={(e) => setCategoryDescription(e.target.value)} />
-                    <button onClick={handleAddCategory}><i className="fas fa-plus"></i> Add Category</button>
-                </div>
-                <div className="crud-column">
+                {/*  <div className="crud-column">
                     <input type="number" placeholder="Product ID to Update" value={productIdToUpdate} onChange={(e) => setProductIdToUpdate(e.target.value)} />
                     <input type="text" placeholder="Updated Product Name" value={updatedProductName} onChange={(e) => setUpdatedProductName(e.target.value)} />
                     <input type="text" placeholder="Updated Product Description" value={updatedProductDescription} onChange={(e) => setUpdatedProductDescription(e.target.value)} />
                     <input type="number" placeholder="Updated Product Price" value={updatedProductPrice} onChange={(e) => setUpdatedProductPrice(e.target.value)} />
                     <input type="text" placeholder="Updated Product Category" value={updatedProductCategory} onChange={(e) => setUpdatedProductCategory(e.target.value)} />
-                    <input type="text" placeholder="Updated Product Image URL" value={updatedProductImageURL} onChange={(e) => setUpdatedProductImageURL(e.target.value)} />
+                    <input type="file" onChange={(e) => handleImageUpload(e, setUpdatedProductImage)} />
                     <label htmlFor="updatedinstock">Updated In Stock: </label>
                     <input type="checkbox" id="updatedinstock" checked={updatedProductInStock} onChange={(e) => setUpdatedProductInStock(e.target.checked)} />
-                    <button onClick={handleUpdateProduct}><i className="fas fa-plus"></i> Update Product</button>
+                    <button onClick={handleUpdateProduct}><FontAwesomeIcon icon={faPlus} /> Update Product</button>
                 </div>
+                */}
             </div>
             <Footer />
         </>
