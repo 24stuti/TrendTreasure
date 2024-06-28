@@ -9,7 +9,7 @@ import Profile from './Components/Profile';
 import Admin from './Components/Admin';
 import AddProducts from './Components/AddProducts';
 import Cart from './Components/Cart';
-//import ProductList from './Components/ProductList';
+import ProductList from './Components/ProductList';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
         <Header />
         <Banner />
         <Categories />
+        <ProductList/>
         <Footer />
       </>
   
@@ -56,7 +57,7 @@ const App = () => {
   );
 };
 export default App;
-*/
+
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -81,3 +82,31 @@ const App = () => {
 };
 
 export default App;
+*/
+
+// src/App.js
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './Components/Home';
+import ProductList from './Components/ProductList';
+import './App.css';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+      <Route path="/" element={<Home />} exact render={() => (
+          <div className="app-container">
+            <Home />
+          </div>
+        )} />
+        <Route exact path="/" element={<Home />} />
+        <Route path="/category/:categoryName" element={<ProductList />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+

@@ -4,18 +4,20 @@ import Footer from './Footer'; // Assuming you have a Footer component
 import Banner from './Banner'; // Assuming you have a Banner component
 import Categories from './Categories'; // Assuming you have a Categories component
 import './Home.css'; 
-import './Categories.css'; // Example CSS file for styling
-
 
 const Home = () => {
   return (
     <>
       <Header />
-      <Banner />
       <div className="main-container">
+        <div className="banner-container">
+          <Banner />
+        </div>
         <div className="content-container">
           <section className="categories-section">
-            <Categories />
+            <div className="categories-container">
+              <Categories />
+            </div>
           </section>
         </div>
       </div>

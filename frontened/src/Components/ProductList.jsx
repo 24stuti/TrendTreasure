@@ -4,11 +4,12 @@ import './ProductList.css';
 import Header from './Header';
 import Footer from './Footer';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const config = require('../Config/Constant');
 
-const ProductList = ({ match }) => {
-  const categoryName = match.params.categoryName;
+const ProductList = () => {
+  const { categoryName } = useParams();
   const [quantities, setQuantities] = useState({});
   const [products, setProducts] = useState([]);
 
@@ -50,10 +51,18 @@ const ProductList = ({ match }) => {
     <>
       <Header />
       <div className="category-container">
-        <h2>Choose your {categoryName}:</h2>
+        <h2>Explore {categoryName} Essentials - Your Next Favorite Finds!</h2>
         <div className="item-list">
           {products.map((product, index) => (
             <div key={index} className="item">
+              <img 
+                src={`data:image/jpeg;base64,${product.image}`} 
+                alt={product.name} 
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.src = '/images/placeholder.png'; // Fallback image
+                }} 
+              />
               <h3>{product.name}</h3>
               <p>Price: ${product.price}</p>
               <div className="quantity-controls">
