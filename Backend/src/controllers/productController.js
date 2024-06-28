@@ -26,8 +26,8 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   GET /api/products/category/:category
 // @access  Public
 const getProductsByCategory = asyncHandler(async (req, res) => {
-  const category = req.params.category;
-  const products = await Product.find({ category });
+  const category = req.params.categoryName;
+  const products = await Product.find({ category: category });
 
   if (products.length > 0) {
     res.json(products);
