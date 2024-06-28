@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Admin.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -14,21 +14,26 @@ const Admin = () => {
     const [productCategory, setProductCategory] = useState('');
     const [productImage, setProductImage] = useState('');
     const [productInStock, setProductInStock] = useState(false);
+    const [productStockCount, setProductStockCount] = useState(0);
+    const [categories, setCategories] = useState([]);
 
-    const [categoryName, setCategoryName] = useState('');
-    const [categoryDescription, setCategoryDescription] = useState('');
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${config.BASE_URL}category/fetchCategories`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setCategories(data); // Assuming the API returns an array of category objects
+                } else {
+                    console.error('Failed to fetch categories');
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
 
-    const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
-
-    const [productIdToUpdate, setProductIdToUpdate] = useState('');
-    const [updatedProductName, setUpdatedProductName] = useState('');
-    const [updatedProductDescription, setUpdatedProductDescription] = useState('');
-    const [updatedProductPrice, setUpdatedProductPrice] = useState('');
-    const [updatedProductCategory, setUpdatedProductCategory] = useState('');
-    const [updatedProductImage, setUpdatedProductImage] = useState('');
-    const [updatedProductInStock, setUpdatedProductInStock] = useState(false);
-
-    const [categoryIdToGetProducts, setCategoryIdToGetProducts] = useState('');
+        fetchCategories();
+    }, []);
 
     const handleImageUpload = (e, setImage) => {
         const file = e.target.files[0];
@@ -47,7 +52,6 @@ const Admin = () => {
 
     const handleAddProduct = async () => {
         try {
-            console.log(productImage);
             const response = await fetch(`${config.BASE_URL}products/addProduct`, {
                 method: 'POST',
                 headers: {
@@ -60,14 +64,14 @@ const Admin = () => {
                     price: productPrice,
                     category: productCategory,
                     image: productImage,
-                    inStock: productInStock
+                    inStock: productInStock,
+                    stockCount: productStockCount
                 })
             });
             if (response.ok) {
                 console.log("Product added successfully");
                 // You may want to update state or show a success message
             } else {
-                // Handle error
                 const data = await response.json();
                 console.error(data.message);
             }
@@ -76,131 +80,41 @@ const Admin = () => {
         }
     };
 
-    /* const handleAddCategory = async () => {
-        try {
-            const response = await fetch(`/api/categories/${categoryIdToPost}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify({
-                    name: categoryName,
-                    description: categoryDescription
-                })
-            });
-            if (response.ok) {
-                console.log("Category added successfully");
-                // You may want to update state or show a success message
-            } else {
-                // Handle error
-                const data = await response.json();
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Error adding category:', error);
-        }
-    };
-
-    const handleDeleteCategory = async () => {
-        try {
-            const response = await fetch(`/api/categories/${categoryIdToDelete}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            });
-            if (response.ok) {
-                // Category deleted successfully
-                // You may want to update state or show a success message
-            } else {
-                // Handle error
-                const data = await response.json();
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Error deleting category:', error);
-        }
-    };
-
-    const handleUpdateProduct = async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/product/`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify({
-                    productId: productIdToUpdate,
-                    name: updatedProductName,
-                    description: updatedProductDescription,
-                    price: updatedProductPrice,
-                    category: updatedProductCategory,
-                    image: updatedProductImage,
-                    inStock: updatedProductInStock
-                })
-            });
-            if (response.ok) {
-                console.log("Product updated successfully");
-                // You may want to update state or show a success message
-            } else {
-                // Handle error
-                const data = await response.json();
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Error updating product:', error);
-        }
-    };
-    */
-
-    const handleGetProductsByCategory = async () => {
-        try {
-            const response = await fetch(`/api/category/${categoryIdToGetProducts}`, {
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                // Handle received products data
-            } else {
-                // Handle error
-                const data = await response.json();
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Error getting products by category:', error);
-        }
-    };
-
     return (
         <>
             <Header />
             <div className="admin-container">
                 <div className="crud-column">
+                    <label>Product Name</label>
                     <input type="text" placeholder="Product Name" value={productName} onChange={(e) => setProductName(e.target.value)} />
+                    
+                    <label>Product Description</label>
                     <input type="text" placeholder="Product Description" value={productDescription} onChange={(e) => setProductDescription(e.target.value)} />
+                    
+                    <label>Product Price</label>
                     <input type="number" placeholder="Product Price" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
-                    <input type="text" placeholder="Product Category" value={productCategory} onChange={(e) => setProductCategory(e.target.value)} />
+                    
+                    <label>Product Category</label>
+                    <select value={productCategory} onChange={(e) => setProductCategory(e.target.value)}>
+                        <option value="" disabled>Select Category</option>
+                        {categories.map((category, index) => (
+                            <option key={index} value={category.categoryName}>{category.categoryName}</option>
+                        ))}
+                    </select>
+                    
+                    <label>Product Image</label>
                     <input type="file" onChange={(e) => handleImageUpload(e, setProductImage)} />
-                    <label htmlFor="instock">In Stock: </label>
-                    <input type="checkbox" id="instock" checked={productInStock} onChange={(e) => setProductInStock(e.target.checked)} />
+                    
+                    <div className="stock-checkbox">
+                        <label htmlFor="instock">In Stock:</label>
+                        <input type="checkbox" id="instock" checked={productInStock} onChange={(e) => setProductInStock(e.target.checked)} />
+                    </div>
+                    
+                    <label>Stock Count</label>
+                    <input type="number" placeholder="Stock Count" value={productStockCount} onChange={(e) => setProductStockCount(e.target.value)} />
+                    
                     <button onClick={handleAddProduct}><FontAwesomeIcon icon={faPlus} /> Add Product</button>
                 </div>
-                {/*  <div className="crud-column">
-                    <input type="number" placeholder="Product ID to Update" value={productIdToUpdate} onChange={(e) => setProductIdToUpdate(e.target.value)} />
-                    <input type="text" placeholder="Updated Product Name" value={updatedProductName} onChange={(e) => setUpdatedProductName(e.target.value)} />
-                    <input type="text" placeholder="Updated Product Description" value={updatedProductDescription} onChange={(e) => setUpdatedProductDescription(e.target.value)} />
-                    <input type="number" placeholder="Updated Product Price" value={updatedProductPrice} onChange={(e) => setUpdatedProductPrice(e.target.value)} />
-                    <input type="text" placeholder="Updated Product Category" value={updatedProductCategory} onChange={(e) => setUpdatedProductCategory(e.target.value)} />
-                    <input type="file" onChange={(e) => handleImageUpload(e, setUpdatedProductImage)} />
-                    <label htmlFor="updatedinstock">Updated In Stock: </label>
-                    <input type="checkbox" id="updatedinstock" checked={updatedProductInStock} onChange={(e) => setUpdatedProductInStock(e.target.checked)} />
-                    <button onClick={handleUpdateProduct}><FontAwesomeIcon icon={faPlus} /> Update Product</button>
-                </div>
-                */}
             </div>
             <Footer />
         </>
@@ -208,3 +122,4 @@ const Admin = () => {
 };
 
 export default Admin;
+

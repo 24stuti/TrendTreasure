@@ -1,46 +1,73 @@
+// src/components/ProductList.js
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
+import Header from './Header';
+import Footer from './Footer';
+import axios from 'axios';
 
-const ProductList = ({ category }) => {
+const config = require('../Config/Constant');
+
+const ProductList = ({ match }) => {
+  const categoryName = match.params.categoryName;
+  const [quantities, setQuantities] = useState({});
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/category/${category}`);
-        const data = await response.json();
-        setProducts(data);
-        setLoading(false);
+        const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
-        setLoading(false);
       }
     };
-
     fetchProducts();
-  }, [category]);
+  }, [categoryName]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const initialQuantities = {};
+    products.forEach(product => {
+      initialQuantities[product.name] = 1;
+    });
+    setQuantities(initialQuantities);
+  }, [products]);
+
+  const handleIncrement = (item) => {
+    setQuantities({ ...quantities, [item]: quantities[item] + 1 });
+  };
+
+  const handleDecrement = (item) => {
+    if (quantities[item] > 1) {
+      setQuantities({ ...quantities, [item]: quantities[item] - 1 });
+    }
+  };
+
+  const handleAddToCart = (item) => {
+    console.log(`Added ${quantities[item]} ${item}(s) to cart.`);
+  };
 
   return (
-    <div className="product-list">
-      <h2>{category}</h2>
-      <div className="products">
-        {products.map((product) => (
-          <div key={product._id} className="product-item">
-            <img src={product.image} alt={product.name} />
-            <div className="product-info">
+    <>
+      <Header />
+      <div className="category-container">
+        <h2>Choose your {categoryName}:</h2>
+        <div className="item-list">
+          {products.map((product, index) => (
+            <div key={index} className="item">
               <h3>{product.name}</h3>
-              <p>${product.price}</p>
-              <p>{product.description}</p>
+              <p>Price: ${product.price}</p>
+              <div className="quantity-controls">
+                <button onClick={() => handleDecrement(product.name)}>-</button>
+                <span>{quantities[product.name]}</span>
+                <button onClick={() => handleIncrement(product.name)}>+</button>
+              </div>
+              <button className="add-to-cart" onClick={() => handleAddToCart(product.name)}>Add to Cart</button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

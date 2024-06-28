@@ -58,15 +58,18 @@ const Login = () => {
   const handleNameChange = (e) => setName(e.target.value);
   const handleToggle = () => setIsLogin(!isLogin);
 
-  const handleLoginSuccess = (email, role) => {
+  const handleLoginSuccess = (email, name, role) => {
     console.log('Logged in successfully as', email);
     setIsAuth(true);
+    localStorage.setItem('user', JSON.stringify({ email, name })); // Save user data to local storage
     if (role === 'User') {
       window.location.href = '/'; // User dashboard route
     } else {
       window.location.href = '/admin'; // Admin dashboard route
     }
   };
+
+  
 
   const verifyToken = async (token) => {
     try {
@@ -86,11 +89,11 @@ const Login = () => {
       console.log('Logging in...');
       const response = await axios.post(`${config.BASE_URL}users/login`, { email, password });
       console.log(response);
-      const { token, role } = response.data;
+      const { token, role, name } = response.data; // Assuming 'name' is returned by the API
       console.log(token);
       console.log(role);
       localStorage.setItem('token', token);
-      handleLoginSuccess(email, role);
+      handleLoginSuccess(email, name, role); // Pass the name to the function
     } catch (error) {
       setErrors({ login: error.response?.data?.message || 'An unknown error occurred' });
       console.error('Login Error:', error);
@@ -99,6 +102,7 @@ const Login = () => {
       }, 5000);
     }
   };
+
 
   const handleSignup = async () => {
     if (!validateForm()) {
