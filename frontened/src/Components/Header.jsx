@@ -3,6 +3,7 @@ import Login from './login'; // Import your Login component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import './Header.css'; // Import your header styles
+import Profile from './Profile';
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -41,15 +42,7 @@ const Header = () => {
           <div className="header-icon profile-dropdown">
             <FontAwesomeIcon icon={faUserCircle} /> Profile
             <div className="profile-dropdown-content">
-              <a href="/profile">Hello, Stuti Gupta</a>
-              <a href="/orders">Orders</a>
-              <a href="/wishlist">Wishlist</a>
-              <a href="/gift-cards">Gift Cards</a>
-              <a href="/contact-us">Contact Us</a>
-              <a href="/coupons">Coupons</a>
-              <a href="/address">Address</a>
-              <a href="/edit-profile">Edit Profile</a>
-              <a href="/logout">Logout</a>
+              <Profile/>
             </div>
           </div>
         </div>
