@@ -32,7 +32,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
       cart.items[itemIndex].quantity += quantity;
     } else {
       // Item does not exist in cart, add new item
-      cart.items.push({ product: productId, quantity });
+      cart.items.push({ product: productId, quantity:quantity });
     }
 
     await cart.save();
@@ -40,7 +40,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
     // No cart for user, create new cart
     const newCart = await Cart.create({
       user,
-      items: [{ product: productId, quantity }],
+      items: [{ product: productId, quantity:quantity }],
     });
 
     await newCart.save();
