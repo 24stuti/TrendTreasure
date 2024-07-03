@@ -117,6 +117,7 @@ import ProductList from './Components/ProductList';
 import Cart from './Components/Cart';
 import Home from './Components/Home';
 import Login from './Components/login'; // Ensure you have a Login component
+import Admin from './Components/Admin';
 import './App.css';
 
 const App = () => {
@@ -133,6 +134,7 @@ const App = () => {
           <Route path="/login" element={<Login />} /> {/* Add this line */}
           <Route path="/category/:categoryName" element={<ProductList />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/admin" element={<Admin />}/>
         </Routes>
  
     </Router>

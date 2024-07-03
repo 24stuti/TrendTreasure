@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
-import Login from './login'; // Import your Login component
+import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import './Header.css'; // Import your header styles
 import Profile from './Profile';
-import Cart from './Cart'; // Import your Cart component
 
 const Header = () => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showCart, setShowCart] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLoginClick = () => {
-    setShowLogin(true);
+    navigate('/login'); // Navigate to login page
   };
 
   const handleCartClick = () => {
-    setShowCart(!showCart);
+    navigate('/cart'); // Navigate to cart page
   };
 
   return (
@@ -48,17 +46,11 @@ const Header = () => {
           <div className="header-icon profile-dropdown">
             <FontAwesomeIcon icon={faUserCircle} /> Profile
             <div className="profile-dropdown-content">
-              <Profile/>
+              <Profile />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Conditionally render Login component */}
-      {showLogin && <Login />}
-
-      {/* Conditionally render Cart component */}
-      {showCart && <Cart />}
     </header>
   );
 };
