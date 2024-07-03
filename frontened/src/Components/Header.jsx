@@ -4,12 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import './Header.css'; // Import your header styles
 import Profile from './Profile';
+import Cart from './Cart'; // Import your Cart component
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const [showCart, setShowCart] = useState(false);
 
   const handleLoginClick = () => {
     setShowLogin(true);
+  };
+
+  const handleCartClick = () => {
+    setShowCart(!showCart);
   };
 
   return (
@@ -36,7 +42,7 @@ const Header = () => {
           <div className="header-icon" onClick={handleLoginClick}>
             <FontAwesomeIcon icon={faUser} /> Login
           </div>
-          <div className="header-icon">
+          <div className="header-icon" onClick={handleCartClick}>
             <FontAwesomeIcon icon={faShoppingCart} /> Cart
           </div>
           <div className="header-icon profile-dropdown">
@@ -50,6 +56,9 @@ const Header = () => {
 
       {/* Conditionally render Login component */}
       {showLogin && <Login />}
+
+      {/* Conditionally render Cart component */}
+      {showCart && <Cart />}
     </header>
   );
 };

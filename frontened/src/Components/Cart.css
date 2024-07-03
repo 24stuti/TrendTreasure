@@ -1,130 +1,122 @@
+/* Container styling */
+.cart-container {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
 
-/* cartSell.css */
-.cart-container {
-    margin: 20px;
+.cart-container.active {
+  right: 0;
+}
+
+.cart-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Product list styling */
+.product-list {
+  margin-bottom: 20px;
+}
+
+.product-item {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.product-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+.product-info {
+  flex-grow: 1;
+}
+
+.product-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+/* Quantity controls styling */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-controls button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.quantity-controls button:hover {
+  background-color: #0056b3;
+}
+
+.quantity-controls span {
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Total price and submit button styling */
+.total-price {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.total-price p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.total-price button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.total-price button:hover {
+  background-color: #000000;
+}
+
+/* Pickup message styling */
+.total-price p {
+  font-size: 14px;
+  color: #000000;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .cart-container {
+    width: 100%;
   }
-  
-  .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-item {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    display: flex;
-  }
-  
-  .product-image img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 10px;
-  }
-  
-  .product-info {
-    flex-grow: 1;
-  }
-  
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-  }
-  
-  .quantity-controls button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .quantity-controls span {
-    margin: 0 10px;
-  }
-  
-  .total-price {
-    margin-top: 20px;
-    text-align: right;
-  }
-  
-  .total-price button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4fc244;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .total-price button:hover {
-    background-color: #2f8e2f;
-  }
-/* cartSell.css */
-.cart-container {
-    margin: 20px;
-  }
-  
-  .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-item {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    display: flex;
-  }
-  
-  .product-image img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 10px;
-  }
-  
-  .product-info {
-    flex-grow: 1;
-  }
-  
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-  }
-  
-  .quantity-controls button {
-    background-color: #3f9132;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .quantity-controls span {
-    margin: 0 10px;
-  }
-  
-  .total-price {
-    margin-top: 20px;
-    text-align: right;
-  }
-  
-  .total-price button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #66dde6;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .total-price button:hover {
-    background-color: #22823a;
-  }
-    
+}

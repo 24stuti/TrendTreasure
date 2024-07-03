@@ -82,7 +82,7 @@ const App = () => {
 };
 
 export default App;
-*/
+
 
 // src/App.js
 // src/App.js
@@ -109,4 +109,34 @@ function App() {
 }
 
 export default App;
+*/
 
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProductList from './Components/ProductList';
+import Cart from './Components/Cart';
+import Home from './Components/Home';
+import Login from './Components/login'; // Ensure you have a Login component
+import './App.css';
+
+const App = () => {
+  return (
+    <Router>
+   
+      
+        <Routes>
+        <Route path="/" element={<Home />} exact render={() => (
+          <div className="app-container">
+            <Home />
+          </div>
+        )} />
+          <Route path="/login" element={<Login />} /> {/* Add this line */}
+          <Route path="/category/:categoryName" element={<ProductList />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+ 
+    </Router>
+  );
+};
+
+export default App;
