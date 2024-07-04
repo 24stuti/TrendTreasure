@@ -166,12 +166,12 @@ const Cart = () => {
     }
   };
 
-  const decrementItem = async (productId,quantity) => {
+  const decrementItem = async (productId, quantity) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(
-        `${config.BASE_URL}cart`,
-        { productId, quantity },
+      await axios.put(
+        `${config.BASE_URL}cart/decreaseItemQuantity/${productId}`,
+        { quantity },
         {
           headers: {
             Authorization: `Bearer ${token}`,
