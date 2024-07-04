@@ -68,8 +68,41 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    decrease item quantity from cart
+// @route   put /api/cart/:id
+// @access  Private
+
+const decreaseItemQuantity = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { quantity } = req.body;
+
+  const cart = await Cart.findOne({ user: req.user._id });
+
+  if (!cart) {
+    res.status(404);
+    throw new Error('Cart not found');
+  }
+  const itemIndex = cart.items.findIndex(item => item.product.toString() === id);
+  //console.log(cart.items, "--------", itemIndex)
+
+  if (itemIndex > -1) {
+    cart.items[itemIndex].quantity -= quantity;
+
+    if (cart.items[itemIndex].quantity <= 0) {
+      cart.items.splice(itemIndex, 1); // Remove item if quantity goes to 0 or below
+    }
+
+    await cart.save();
+    res.json(cart);
+  } else {
+    res.status(404);
+    throw new Error('Item not found in cart');
+  }
+});
+
 module.exports = {
   getCart,
   addItemToCart,
   removeItemFromCart,
+  decreaseItemQuantity
 };
