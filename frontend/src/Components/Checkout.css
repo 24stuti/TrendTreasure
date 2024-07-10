@@ -1,0 +1,154 @@
+.checkout-page {
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.checkout-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.checkout-container h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.checkout-address,
+.checkout-summary,
+.checkout-payment {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.checkout-address h3,
+.checkout-summary h3,
+.checkout-payment h3 {
+  color: #2c3e50;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.checkout-address p,
+.checkout-summary p {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.checkout-total {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-options label {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.payment-options input[type="radio"] {
+  margin-right: 10px;
+}
+
+.checkout-card-details,
+.checkout-upi-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.checkout-card-details input,
+.checkout-upi-details input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.checkout-button,
+.place-order-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.checkout-button:hover,
+.place-order-button:hover {
+  background-color: #2980b9;
+}
+
+.checkout-button:disabled,
+.place-order-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.checkout-message {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.checkout-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.checkout-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.order-summary {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.order-summary h3 {
+  color: #2c3e50;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.order-summary p {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 20px;
+  }
+
+  .checkout-button,
+  .place-order-button {
+    font-size: 16px;
+    padding: 12px 24px;
+  }
+}

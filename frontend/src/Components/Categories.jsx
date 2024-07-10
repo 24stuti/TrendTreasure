@@ -1,4 +1,3 @@
-// src/components/Categories.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Categories.css';
@@ -32,7 +31,7 @@ const Categories = () => {
             <section className="categories">
                 {categories.map((category, index) => (
                     <div className="category" key={index}>
-                        <Link to={`/category/${category.categoryName}`} target="_blank">
+                        <Link to={`/category/${category.categoryName}`}>
                             <img 
                                 src={`data:image/jpeg;base64,${category.image}`} 
                                 alt={category.categoryName} 

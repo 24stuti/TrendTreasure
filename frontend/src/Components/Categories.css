@@ -1,52 +1,77 @@
-/* Categories.css */
-
 .categories {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-  max-width: 1700px;
-  margin: 0 auto;
-}
-
-.category-link {
-  text-decoration: none;
-  color: inherit;
-  flex: 1 1 calc(25% - 40px); /* Adjust based on your layout needs */
-  max-width: calc(25% - 40px); /* Adjust based on your layout needs */
-  margin: 10px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.category-link:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.category img {
-  width: 100%;
-  height: 550px; /* Fixed height for all images */
-  border-radius: 10px 10px 0 0;
-  object-fit: cover; /* Ensure the entire image fits within the specified dimensions */
-  gap: 10px;
-}
-
-.category h3 {
-  margin: 15px 0;
-  font-size: 1.2em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
 }
 
 h1 {
   text-align: center;
-  margin: 20px 0;
-  font-size: 3em;
+  font-size: 2.5rem;
   color: #333;
-  padding: 40px;
-  padding-top: 40px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin: 2rem 0;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 1px;
+}
+
+.category {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.category:hover {
+  transform: translateY(-5px);
+}
+
+.category img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.category:hover img {
+  transform: scale(1.05);
+}
+
+.category h3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.3s ease;
+}
+
+.category:hover h3 {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+  .categories {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .category img {
+    height: 250px;
+  }
+
+  .category h3 {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+  }
 }

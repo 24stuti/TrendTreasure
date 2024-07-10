@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './Profile.css'; // Import profile styles
+import { useNavigate } from 'react-router-dom';
+import './Profile.css';
 
 const Profile = () => {
   const [user, setUser] = useState({ name: '', email: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -18,25 +20,32 @@ const Profile = () => {
       }
     }
   }, []);
-  
+
+  const handleOrdersClick = () => {
+    navigate('/OrderSummary'); // Change this to navigate to a list of orders
+  };
 
   return (
-    <div className="profile">
-      <h2>Hello, {user.name}!</h2>
+    <div className="profile-container">
+      <h1>Hello, {user.name}!</h1>
       <p>Email: {user.email}</p>
       <ul>
-        <li><a href="/orders">Orders</a></li>
-        <li><a href="/wishlist">Wishlist</a></li>
-        <li><a href="/gift-cards">Gift Cards</a></li>
-        <li><a href="/contact-us">Contact Us</a></li>
-        <li><a href="/coupons">Coupons</a></li>
-        <li><a href="/address">Address</a></li>
-        <li><a href="/edit-profile">Edit Profile</a></li>
-        <li><a href="/" onClick={() => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          window.location.href = '/';
-        }}>Logout</a></li>
+        <li><button onClick={handleOrdersClick}>Orders</button></li>
+        <li>Wishlist</li>
+        <li>Gift Cards</li>
+        <li>Contact Us</li>
+        <li>Coupons</li>
+        <li>Address</li>
+        <li>Edit Profile</li>
+        <li>
+          <button onClick={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            navigate('/');
+          }}>
+            Logout
+          </button>
+        </li>
       </ul>
     </div>
   );

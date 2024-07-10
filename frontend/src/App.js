@@ -119,6 +119,10 @@ import Home from './Components/Home';
 import Login from './Components/login'; // Ensure you have a Login component
 import Admin from './Components/Admin';
 import './App.css';
+import Checkout from './Components/Checkout';
+import Address from './Components/Address';
+import OrderSummary from './Components/OrderSummary';
+import Profile from './Components/Profile';
 
 const App = () => {
   return (
@@ -135,6 +139,10 @@ const App = () => {
           <Route path="/category/:categoryName" element={<ProductList />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/admin" element={<Admin />}/>
+          <Route path="/checkout" element={<Checkout/>}/>
+          <Route path="/address" element={<Address/>}/>
+          <Route path="/profile" element={<Profile/>} />
+          <Route path="/orders" element={<OrderSummary />} />
         </Routes>
  
     </Router>

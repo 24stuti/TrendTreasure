@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate hook
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import './Header.css'; // Import your header styles
@@ -16,11 +16,17 @@ const Header = () => {
     navigate('/cart'); // Navigate to cart page
   };
 
+  const handleLogoClick = () => {
+    navigate('/'); // Navigate to home page
+  };
+
   return (
     <header className="header">
       <div className="header-top">
         <div className="logo">
-          <img src="/images/logo.png" alt="TrendTreasure Logo" className='logo-image' />
+          <Link to="/" onClick={handleLogoClick}>
+            <img src="/images/logo.png" alt="TrendTreasure Logo" className='logo-image' />
+          </Link>
         </div>
         <nav className="header-bottom">
           <ul>

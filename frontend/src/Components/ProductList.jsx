@@ -3,26 +3,27 @@ import './ProductList.css';
 import Header from './Header';
 import Footer from './Footer';
 import axios from 'axios';
-import { useParams, Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useParams, useNavigate } from 'react-router-dom';
 
 const config = require('../Config/Constant');
 
 const ProductList = () => {
   const { categoryName } = useParams();
+  const navigate = useNavigate();
   const [quantities, setQuantities] = useState({});
   const [products, setProducts] = useState([]);
   const [addToCartMessage, setAddToCartMessage] = useState('');
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
         setProducts(response.data);
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
-        setLoading(false); // Handle loading state on error as well
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -75,14 +76,13 @@ const ProductList = () => {
           setAddToCartMessage('');
         }, 3000);
       } else {
-        console.error('Error adding to cart:', response.data.error); // Log the actual error from the backend
+        console.error('Error adding to cart:', response.data.error);
       }
     } catch (error) {
-      console.error('Error adding to cart:', error.message); // Log frontend errors
+      console.error('Error adding to cart:', error.message);
     }
   };
 
-  // Handle loading state
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -100,11 +100,11 @@ const ProductList = () => {
                 alt={product.name} 
                 onError={(e) => {
                   e.target.onerror = null; 
-                  e.target.src = '/images/placeholder.png'; // Fallback image
+                  e.target.src = '/images/placeholder.png';
                 }} 
               />
               <h3>{product.name}</h3>
-              <p>Price: ${product.price}</p>
+              <p>Price: ₹{product.price}</p>
               <div className="quantity-controls">
                 <button onClick={() => handleDecrement(product.name)}>-</button>
                 <span>{quantities[product.name]}</span>
@@ -117,7 +117,7 @@ const ProductList = () => {
             </div>
           ))}
         </div>
-        <Link to="/cart" className="go-to-cart-button">Go to Cart</Link>
+        <button className="go-to-cart-button" onClick={() => navigate('/cart')}>Go to Cart</button>
       </div>
       <Footer />
     </>
