@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
+const Cart = require('../models/Cart')
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -31,6 +32,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
+    // set cart to blank if order successfull
+    await Cart.updateOne({user: req.user._id}, {$set: {items: []}})
 
     res.status(201).json(createdOrder);
   }
