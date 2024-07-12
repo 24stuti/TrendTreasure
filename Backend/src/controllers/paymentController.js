@@ -6,11 +6,10 @@ const asyncHandler = require('express-async-handler');
 // @access  Private
 const createPaymentIntent = asyncHandler(async (req, res) => {
   let { amount } = req.body;
-  amount = Math.round(amount)
-  try {
+  amount = Math.round(am  try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: 'inr',
+      currency: 'usd',
     });
 
     res.status(200).json({
