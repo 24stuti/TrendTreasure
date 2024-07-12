@@ -1,25 +1,36 @@
 .profile-container {
-  max-width: 800px;
+  max-width: 600px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  animation: profileFadeIn 0.5s ease-out;
+}
+
+@keyframes profileFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .profile-container h1 {
-  color: #333;
-  font-size: 2.5rem;
+  color: #2c3e50;
+  font-size: 2rem;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 0.5rem;
+  text-align: center;
+  animation: profileSlideIn 0.5s ease-out;
+}
+
+@keyframes profileSlideIn {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 .profile-container p {
-  color: #666;
-  font-size: 1.2rem;
+  color: #34495e;
+  font-size: 1rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .profile-container ul {
@@ -29,29 +40,28 @@
 
 .profile-container li {
   margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #333;
   transition: all 0.3s ease;
 }
 
 .profile-container li:hover {
   transform: translateX(10px);
-  color: #3498db;
 }
 
 .profile-container button {
+  width: 100%;
+  padding: 0.8rem;
   background-color: #3498db;
   color: white;
   border: none;
-  padding: 10px 20px;
   border-radius: 5px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .profile-container button:hover {
   background-color: #2980b9;
+  transform: scale(1.05);
 }
 
 .profile-container li:last-child button {
@@ -62,17 +72,17 @@
   background-color: #c0392b;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .profile-container {
+    margin: 1rem;
     padding: 1rem;
   }
-  
+
   .profile-container h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
-  
-  .profile-container p,
-  .profile-container li {
-    font-size: 1rem;
+
+  .profile-container p {
+    font-size: 0.9rem;
   }
 }

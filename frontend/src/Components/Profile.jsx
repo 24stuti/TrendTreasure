@@ -18,11 +18,13 @@ const Profile = () => {
           console.error('Error parsing user data:', error);
         }
       }
+    } else {
+      navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   const handleOrdersClick = () => {
-    navigate('/OrderSummary'); // Change this to navigate to a list of orders
+    navigate('/order/:id'); // Navigate to the OrderList component
   };
 
   return (

@@ -78,7 +78,7 @@ const Address = () => {
         address: '',
         pincode: '',
         phoneNo: '',
-        email: ''
+        email: '',
       });
       fetchAddresses();
     } catch (err) {

@@ -123,6 +123,8 @@ import Checkout from './Components/Checkout';
 import Address from './Components/Address';
 import OrderSummary from './Components/OrderSummary';
 import Profile from './Components/Profile';
+import CreateOrder from './Components/CreateOrder';
+
 
 const App = () => {
   return (
@@ -141,8 +143,10 @@ const App = () => {
           <Route path="/admin" element={<Admin />}/>
           <Route path="/checkout" element={<Checkout/>}/>
           <Route path="/address" element={<Address/>}/>
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/orders" element={<OrderSummary />} />
+          <Route path="/" element={<Profile/>} />
+          
+          <Route path="/order/:id" element={<OrderSummary />} />
+          <Route path="/create-order" element={<CreateOrder />}/>
         </Routes>
  
     </Router>

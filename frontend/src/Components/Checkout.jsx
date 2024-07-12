@@ -27,6 +27,8 @@ const Checkout = () => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState(null);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [isFetchingPrice, setIsFetchingPrice] = useState(true);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ const Checkout = () => {
   }, [location, navigate]);
 
   const fetchTotalPrice = async () => {
+    setIsFetchingPrice(true);
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -70,11 +73,14 @@ const Checkout = () => {
     } catch (err) {
       console.log("Error while getting prices:", err);
       setMessage("Error fetching cart details. Please try again.");
+    } finally {
+      setIsFetchingPrice(false);
     }
   };
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
+    setMessage('');
   };
 
   const handleCardInputChange = (e) => {
@@ -84,9 +90,38 @@ const Checkout = () => {
     });
   };
 
+  const validateInputs = () => {
+    if (paymentMethod === 'card') {
+      if (cardDetails.number.length !== 16 || !/^\d+$/.test(cardDetails.number)) {
+        setMessage('Invalid card number');
+        return false;
+      }
+      if (cardDetails.name.trim() === '') {
+        setMessage('Please enter the name on the card');
+        return false;
+      }
+      if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) {
+        setMessage('Invalid expiry date (Use MM/YY format)');
+        return false;
+      }
+      if (cardDetails.cvv.length !== 3 || !/^\d+$/.test(cardDetails.cvv)) {
+        setMessage('Invalid CVV');
+        return false;
+      }
+    } else if (paymentMethod === 'upi') {
+      if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
+        setMessage('Invalid UPI ID');
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleCheckout = async () => {
+    if (!validateInputs()) return;
+
     if (paymentMethod === 'cod') {
-      setOrderPlaced(true);
+      setIsConfirming(true);
       return;
     }
   
@@ -102,13 +137,15 @@ const Checkout = () => {
         },
       });
 
-      // Additional payment method logic goes here
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
+      setIsConfirming(true);
     } catch (error) {
       setMessage(`Error: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setIsLoading(false);
     }
-  
-    setIsLoading(false);
   };
 
   const handlePlaceOrder = async () => {
@@ -139,6 +176,7 @@ const Checkout = () => {
           city: address.city,
           postalCode: address.pincode,
           country: 'India',
+          email: address.email,
         },
         paymentMethod,
         itemsPrice: orderSummary.itemsPrice,
@@ -162,13 +200,17 @@ const Checkout = () => {
       }
     } catch (error) {
       setMessage(`Error: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setIsLoading(false);
     }
-  
-    setIsLoading(false);
   };
 
+  if (isFetchingPrice) {
+    return <div>Loading order details...</div>;
+  }
+
   if (!address) {
-    return <div>Loading...</div>;
+    return <div>Loading address information...</div>;
   }
 
   return (
@@ -213,10 +255,10 @@ const Checkout = () => {
         </div>
         {paymentMethod === 'card' && (
           <div className="checkout-card-details">
-            <input type="text" name="number" placeholder="Card Number" onChange={handleCardInputChange} />
+            <input type="text" name="number" placeholder="Card Number" onChange={handleCardInputChange} maxLength="16" />
             <input type="text" name="name" placeholder="Name on Card" onChange={handleCardInputChange} />
-            <input type="text" name="expiry" placeholder="MM/YY" onChange={handleCardInputChange} />
-            <input type="text" name="cvv" placeholder="CVV" onChange={handleCardInputChange} />
+            <input type="text" name="expiry" placeholder="MM/YY" onChange={handleCardInputChange} maxLength="5" />
+            <input type="text" name="cvv" placeholder="CVV" onChange={handleCardInputChange} maxLength="3" />
           </div>
         )}
         {paymentMethod === 'upi' && (
@@ -224,23 +266,31 @@ const Checkout = () => {
             <input type="text" placeholder="UPI ID" onChange={(e) => setUpiId(e.target.value)} />
           </div>
         )}
-        {paymentMethod === 'cod' && orderPlaced ? (
-          <div className="order-summary">
-            <h3>Order Summary</h3>
-            <p>Items: ₹{orderSummary.itemsPrice.toFixed(2)}</p>
-            <p>Shipping: ₹{orderSummary.shippingPrice.toFixed(2)}</p>
-            <p>Tax: ₹{orderSummary.taxPrice.toFixed(2)}</p>
-            <p className="checkout-total">Total: ₹{orderSummary.totalPrice.toFixed(2)}</p>
-            <button className="place-order-button" onClick={handlePlaceOrder} disabled={isLoading}>
-              {isLoading ? 'Processing...' : 'Place Order'}
+        {isConfirming ? (
+          <div className="order-confirmation">
+            <h3>Confirm Your Order</h3>
+            <p>Please review your order details before placing the order.</p>
+            <button 
+              onClick={handlePlaceOrder} 
+              disabled={isLoading}
+              className="place-order-button"
+              aria-label="Confirm and Place Order"
+            >
+              {isLoading ? 'Processing...' : 'Confirm and Place Order'}
             </button>
+            <button onClick={() => setIsConfirming(false)}>Edit Order</button>
           </div>
         ) : (
-          <button className="checkout-button" onClick={handleCheckout} disabled={isLoading || !paymentMethod}>
+          <button 
+            className="checkout-button" 
+            onClick={handleCheckout} 
+            disabled={isLoading || !paymentMethod}
+            aria-label={`${paymentMethod === 'cod' ? 'Continue to Place Order' : `Pay ${orderSummary.totalPrice.toFixed(2)}`}`}
+          >
             {isLoading ? 'Processing...' : paymentMethod === 'cod' ? 'Continue to Place Order' : `Pay ₹${orderSummary.totalPrice.toFixed(2)}`}
           </button>
         )}
-        {message && <p className={`checkout-message ${message.includes('Error') ? 'error' : 'success'}`}>{message}</p>}
+        {message && <p className={`checkout-message ${message.includes('Error') ? 'error' : 'success'}`} role="alert">{message}</p>}
       </div>
       <Footer />
     </div>

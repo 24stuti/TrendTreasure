@@ -1,6 +1,10 @@
+.address-page {
+  background-color: #f8f9fa;
+}
+
 .address-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto; /* Add margin between header and address container */
   padding: 30px;
   font-family: 'Roboto', sans-serif;
   background-color: #f8f9fa;

@@ -1,109 +1,95 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import config from '../Config/Constant';
+import './OrderSummary.css';
 import Header from './Header';
 import Footer from './Footer';
-import axios from 'axios';
-import './OrderSummary.css';
-
-const config = require('../Config/Constant');
 
 const OrderSummary = () => {
   const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [orderId, setOrderId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!orderId) return;
+
     const fetchOrder = async () => {
+      setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login', { state: { from: `/order/${id}` } });
-          return;
-        }
-
-        if (id) {
-          // If we have an order ID, fetch the existing order
-          const response = await axios.get(`${config.BASE_URL}orders/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setOrder(response.data);
-        } else if (location.state && location.state.orderData) {
-          // If we have order data from the checkout process, create a new order
-          await createOrder(location.state.orderData, token);
-        } else {
-          setError('No order data available');
-        }
-        setLoading(false);
-      } catch (err) {
-        setError('Error fetching or creating order details. Please try again.');
-        setLoading(false);
+        const response = await axios.get(`${config.BASE_URL}orders/${orderId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setOrder(response.data);
+      } catch (error) {
+        console.error('Error fetching order:', error.response?.data?.message || 'An error occurred');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchOrder();
-  }, [id, navigate, location]);
+  }, [orderId]);
 
-  const createOrder = async (orderData, token) => {
-    try {
-      const response = await axios.post(`${config.BASE_URL}orders`, orderData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setOrder(response.data);
-      // Optionally, you can redirect to the new order's page
-      navigate(`/order/${response.data._id}`, { replace: true });
-    } catch (error) {
-      setError(`Error creating order: ${error.response?.data?.message || error.message}`);
+  const displayPriceInRupees = (price) => {
+    if (typeof price !== 'undefined') {
+      return `₹${price.toFixed(2)}`;
     }
+    return '';
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!order) return <div>Order not found</div>;
-
   return (
-    <div className="order-summary">
+    <div className="order-summary-page">
       <Header />
       <div className="order-summary-container">
-        <h1>Order Summary</h1>
-        <div className="order-info">
-          <p><strong>Order ID:</strong> {order._id}</p>
-          <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
-          <p><strong>Total:</strong> ₹{order.totalPrice.toFixed(2)}</p>
-          <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
-          <p><strong>Status:</strong> {order.isPaid ? 'Paid' : 'Not Paid'}</p>
-        </div>
-        <div className="shipping-info">
-          <h2>Shipping</h2>
-          <p><strong>Name:</strong> {order.user.name}</p>
-          <p><strong>Email:</strong> {order.user.email}</p>
-          <p><strong>Address:</strong> {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}, {order.shippingAddress.country}</p>
-        </div>
-        <div className="order-items">
-          <h2>Order Items</h2>
-          <ul>
-            {order.orderItems.map((item, index) => (
-              <li key={index}>
-                <span>{item.name}</span>
-                <span>{item.qty} x ₹{item.price} = ₹{(item.qty * item.price).toFixed(2)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="order-summary-details">
-          <h2>Order Summary</h2>
-          <p><strong>Items:</strong> ₹{order.itemsPrice.toFixed(2)}</p>
-          <p><strong>Shipping:</strong> ₹{order.shippingPrice.toFixed(2)}</p>
-          <p><strong>Tax:</strong> ₹{order.taxPrice.toFixed(2)}</p>
-          <p><strong>Total:</strong> ₹{order.totalPrice.toFixed(2)}</p>
-        </div>
+        <h2 className="order-summary-header">Order Summary</h2>
+        <form onSubmit={(e) => e.preventDefault()} className="order-id-form">
+          <input
+            type="text"
+            value={orderId}
+            onChange={(e) => setOrderId(e.target.value)}
+            placeholder="Enter Order ID"
+            required
+          />
+        </form>
+        {isLoading && <div className="loading">Loading order details...</div>}
+        {order && (
+          <div className="order-details">
+            <h3>Order Details</h3>
+            <p><strong>Order ID:</strong> {order._id}</p>
+            <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
+            <p><strong>Shipping Address:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.postalCode}</p>
+            <p><strong>Email:</strong> {order.shippingAddress?.email}</p>
+            <h4>Order Items:</h4>
+            <div className="order-items">
+              {order.orderItems.map((item, index) => (
+                <div key={index} className="order-item">
+                  <img
+                    src={`data:image/jpeg;base64,${item.image}`}
+                    alt={item.name}
+                    className="order-item-image"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/placeholder.png';
+                    }}
+                  />
+                  <div className="order-item-details">
+                    <p className="item-name">{item.name}</p>
+                    <p>Quantity: {item.qty}</p>
+                    <p>Item Price: {displayPriceInRupees(item.price)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="order-summary">
+              <p><strong>Shipping Price:</strong> {displayPriceInRupees(order.shippingPrice)}</p>
+              <p><strong>Tax Price:</strong> {displayPriceInRupees(order.taxPrice)}</p>
+              <p><strong>Total Price:</strong> {displayPriceInRupees(order.totalPrice)}</p>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </div>
