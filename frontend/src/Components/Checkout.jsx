@@ -184,14 +184,29 @@ const Checkout = () => {
         taxPrice: orderSummary.taxPrice,
         totalPrice: orderSummary.totalPrice,
       };
-  
-      const response = await axios.post(`${config.BASE_URL}orders`, order, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      let response;
+      if(paymentMethod === 'cod' ){
+        response = await axios.post(`${config.BASE_URL}orders`, order, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else{
+        const paymentResponse = await axios.post(`${config.BASE_URL}payment`, {"amount": orderSummary?.totalPrice }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        paymentResponse?.status === 200 ? response = await axios.post(`${config.BASE_URL}orders`, order, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }) : console.log("payment failed", response.data.message)
+      }
+      
       if (response.status === 201) {
         setMessage('Order placed successfully!');
         navigate(`/order/${response.data._id}`);
