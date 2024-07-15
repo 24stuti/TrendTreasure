@@ -1,10 +1,10 @@
+// src/components/Checkout.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 import Header from './Header';
 import Footer from './Footer';
 import axios from 'axios';
+import { useAlert } from '../Contexts/AlertContext';
 import './Checkout.css';
 
 const config = require('../Config/Constant');
@@ -24,16 +24,15 @@ const Checkout = () => {
     taxPrice: 0,
     totalPrice: 0,
   });
-  const [orderPlaced, setOrderPlaced] = useState(false);
   const [upiId, setUpiId] = useState('');
-  const [message, setMessage] = useState({ type: '', content: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isFetchingPrice, setIsFetchingPrice] = useState(true);
-
+  
   const location = useLocation();
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     if (location.state && location.state.address) {
@@ -52,29 +51,29 @@ const Checkout = () => {
         navigate('/login', { state: { from: '/cart' } });
         return;
       }
-
+  
       const response = await axios.get(`${config.BASE_URL}cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      
       const itemsPrice = response.data.items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
       const shippingPrice = itemsPrice > 500 ? 0 : 50; // Free shipping for orders over 500
       const taxPrice = itemsPrice * 0.18; // 18% tax
       const totalPrice = itemsPrice + shippingPrice + taxPrice;
-
+  
       setOrderSummary({
         itemsPrice,
         shippingPrice,
         taxPrice,
         totalPrice,
       });
-
+      
       setTotalPrice(totalPrice);
     } catch (err) {
       console.log("Error while getting prices:", err);
-      setMessageContent('error', 'Error fetching cart details. Please try again.');
+      showAlert("Error fetching cart details. Please try again.", 'error');
     } finally {
       setIsFetchingPrice(false);
     }
@@ -82,7 +81,7 @@ const Checkout = () => {
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
-    setMessageContent('');
+    //showAlert('');
   };
 
   const handleCardInputChange = (e) => {
@@ -95,24 +94,24 @@ const Checkout = () => {
   const validateInputs = () => {
     if (paymentMethod === 'card') {
       if (cardDetails.number.length !== 16 || !/^\d+$/.test(cardDetails.number)) {
-        setMessageContent('error', 'Invalid card number');
+        showAlert('Invalid card number', 'error');
         return false;
       }
       if (cardDetails.name.trim() === '') {
-        setMessageContent('error', 'Please enter the name on the card');
+        showAlert('Please enter the name on the card', 'error');
         return false;
       }
       if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) {
-        setMessageContent('error', 'Invalid expiry date (Use MM/YY format)');
+        showAlert('Invalid expiry date (Use MM/YY format)', 'error');
         return false;
       }
       if (cardDetails.cvv.length !== 3 || !/^\d+$/.test(cardDetails.cvv)) {
-        setMessageContent('error', 'Invalid CVV');
+        showAlert('Invalid CVV', 'error');
         return false;
       }
     } else if (paymentMethod === 'upi') {
       if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
-        setMessageContent('error', 'Invalid UPI ID');
+        showAlert('Invalid UPI ID', 'error');
         return false;
       }
     }
@@ -126,13 +125,13 @@ const Checkout = () => {
       setIsConfirming(true);
       return;
     }
-
+  
     setIsLoading(true);
-    setMessageContent('');
-
+    //showAlert('');
+  
     try {
       const token = localStorage.getItem('token');
-
+      
       const cartResponse = await axios.get(`${config.BASE_URL}cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -144,7 +143,7 @@ const Checkout = () => {
 
       setIsConfirming(true);
     } catch (error) {
-      setMessageContent('error', `Error: ${error.response?.data?.message || error.message}`);
+      showAlert(`Error: ${error.response?.data?.message || error.message}`, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -152,17 +151,17 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     setIsLoading(true);
-    setMessageContent('');
-
+    //showAlert('');
+  
     try {
       const token = localStorage.getItem('token');
-
+      
       const cartResponse = await axios.get(`${config.BASE_URL}cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       const orderItems = cartResponse.data.items.map(item => ({
         name: item.product.name,
         qty: item.quantity,
@@ -170,7 +169,7 @@ const Checkout = () => {
         price: item.product.price,
         product: item.product._id,
       }));
-
+  
       const order = {
         orderItems,
         shippingAddress: {
@@ -188,15 +187,15 @@ const Checkout = () => {
       };
 
       let response;
-      if (paymentMethod === 'cod') {
+      if(paymentMethod === 'cod' ){
         response = await axios.post(`${config.BASE_URL}orders`, order, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
-      } else {
-        const paymentResponse = await axios.post(`${config.BASE_URL}payment`, { "amount": orderSummary?.totalPrice }, {
+      } else{
+        const paymentResponse = await axios.post(`${config.BASE_URL}payment`, {"amount": orderSummary?.totalPrice }, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -207,24 +206,20 @@ const Checkout = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        }) : console.log("payment failed", response.data.message);
+        }) : console.log("payment failed", response.data.message)
       }
-
+      
       if (response.status === 201) {
+        showAlert('Order placed successfully!', 'success');
         navigate(`/order/${response.data._id}`);
-        setMessageContent('success', 'Order placed successfully!');
       } else {
-        setMessageContent('error', `Error: ${response.data.message}`);
+        showAlert(`Error: ${response.data.message}`, 'error');
       }
     } catch (error) {
-      setMessageContent('error', `Error: ${error.response?.data?.message || error.message}`);
+      showAlert(`Error: ${error.response?.data?.message || error.message}`, 'error');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const setMessageContent = (type, content) => {
-    setMessage({ type, content });
   };
 
   if (isFetchingPrice) {
@@ -298,11 +293,6 @@ const Checkout = () => {
           <button className="checkout-button" onClick={handleCheckout} disabled={isLoading || !paymentMethod} aria-label={`${paymentMethod === 'cod' ? 'Continue to Place Order' : `Pay ₹${orderSummary.totalPrice.toFixed(2)}`}`}>
             {isLoading ? 'Processing...' : paymentMethod === 'cod' ? 'Continue to Place Order' : `Pay ₹${orderSummary.totalPrice.toFixed(2)}`}
           </button>
-        )}
-        {message.content && (
-          <Stack sx={{ width: '100%' }} spacing={2}>
-            <Alert severity={message.type}>{message.content}</Alert>
-          </Stack>
         )}
       </div>
       <Footer />

@@ -3,6 +3,7 @@ import './ProductList.css';
 import Header from './Header';
 import Footer from './Footer';
 import axios from 'axios';
+import { useAlert } from '../Contexts/AlertContext';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const config = require('../Config/Constant');
@@ -14,6 +15,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [addToCartMessage, setAddToCartMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const { showAlert } = useAlert()
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,6 +24,7 @@ const ProductList = () => {
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
+        showAlert("Error fetching products", "error")
         console.error('Error fetching products:', error);
         setLoading(false);
       }
@@ -53,6 +56,7 @@ const ProductList = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
+        showAlert("No token found. Please log in again!", "error")
         throw new Error('No token found. Please log in again.');
       }
   
@@ -70,15 +74,18 @@ const ProductList = () => {
         }
       );
   
-      if (response.status === 200) {
-        setAddToCartMessage(`Added ${quantities[product.name]} ${product.name}(s) to cart.`);
-        setTimeout(() => {
-          setAddToCartMessage('');
-        }, 3000);
+      if (response.status === 201) {
+        //setAddToCartMessage(`Added ${quantities[product.name]} ${product.name}(s) to cart.`);
+        showAlert(`Added ${quantities[product.name]} ${product.name}(s) to cart.`, 'success');
+        // setTimeout(() => {
+        //   setAddToCartMessage('');
+        // }, 3000);
       } else {
+        showAlert('Error adding to cart!', 'error');
         console.error('Error adding to cart:', response.data.error);
       }
     } catch (error) {
+      showAlert('Error adding to cart!', 'error');
       console.error('Error adding to cart:', error.message);
     }
   };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAlert } from '../Contexts/AlertContext';
 import './login.css';
 
 const config = require('../Config/Constant');
@@ -14,6 +15,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [forgotPassword, setForgotPassword] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
+  const { showAlert } = useAlert();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,6 +65,7 @@ const Login = () => {
   const handleToggle = () => setIsLogin(!isLogin);
 
   const handleLoginSuccess = (email, name, role, isAdmin) => {
+    showAlert(`Logged in successfully as' ${email}`, 'success')
     console.log('Logged in successfully as', email, 'Role:', role, 'Is Admin:', isAdmin);
     setIsAuth(true);
     localStorage.setItem('user', JSON.stringify({ email, name, role, isAdmin }));
@@ -76,6 +79,7 @@ const Login = () => {
       const response = await axios.post(`${config.BASE_URL}users/verify-token`, { token });
       setIsAuth(response.data.isAuth);
     } catch (error) {
+      showAlert("Token verification failed", "error");
       console.error('Token verification failed:', error);
       setIsAuth(false);
     }
@@ -93,11 +97,11 @@ const Login = () => {
       localStorage.setItem('token', token);
       handleLoginSuccess(email, name, role, isAdmin);
     } catch (error) {
-      setErrors({ login: error.response?.data?.message || 'An unknown error occurred' });
+      showAlert(`Login failed: ${error.response?.data?.message || 'An unknown error occurred'}`, 'error');
       console.error('Login Error:', error);
-      setTimeout(() => {
-        setErrors({});
-      }, 5000);
+      // setTimeout(() => {
+      //   setErrors({});
+      // }, 5000);
     }
   };
 
@@ -110,11 +114,11 @@ const Login = () => {
       await axios.post(`${config.BASE_URL}users/register`, { email, password, name });
       await handleLogin();
     } catch (error) {
-      setErrors({ signup: error.response?.data?.message || 'An unknown error occurred' });
+      showAlert(`signup failed: ${error.response?.data?.message || 'An unknown error occurred' }`, 'error');
       console.error('Signup Error:', error);
-      setTimeout(() => {
-        setErrors({});
-      }, 5000);
+      // setTimeout(() => {
+      //   setErrors({});
+      // }, 5000);
     }
   };
 

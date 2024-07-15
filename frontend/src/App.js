@@ -113,6 +113,7 @@ export default App;
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AlertProvider } from './Contexts/AlertContext';
 import ProductList from './Components/ProductList';
 import Cart from './Components/Cart';
 import Home from './Components/Home';
@@ -130,7 +131,7 @@ const App = () => {
   return (
     <Router>
    
-      
+      <AlertProvider>
         <Routes>
         <Route path="/" element={<Home />} exact render={() => (
           <div className="app-container">
@@ -148,7 +149,7 @@ const App = () => {
           <Route path="/order/:id" element={<OrderSummary />} />
           <Route path="/create-order" element={<CreateOrder />}/>
         </Routes>
- 
+        </AlertProvider>
     </Router>
   );
 };
