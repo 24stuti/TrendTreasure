@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const sendEmail = require('../utils/sendEmail');
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -43,6 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
+    await sendEmail({
+      to: user.email,
+      subject: 'Welcome to Trend Treasure',
+      text: `Hi ${user.name}, welcome to Trend Treasure! Your account has been successfully created.`,
+      html: accountCreationTemplate(user.name),
+    });
     res.status(201).json({
       _id: user._id,
       name: user.name,

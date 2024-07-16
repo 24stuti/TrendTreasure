@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
-const Cart = require('../models/Cart')
+const Cart = require('../models/Cart');
+const sendEmail = require('../utils/sendEmail');
+const orderConfirmationTemplate = require('../templates/orderConfirmationTemplate')
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -32,6 +34,15 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // send email to the provided email id with order details
+    await sendEmail({
+      to: shippingAddress?.email,
+      subject: 'Order Confirmation!',
+      text: `Hi ${req.user.name}, your order with ID ${createdOrder._id} has been successfully placed.`,
+      html: orderConfirmationTemplate(req.user.name, createdOrder._id, orderItems),
+    });
+
     // set cart to blank if order successfull
     await Cart.updateOne({user: req.user._id}, {$set: {items: []}})
 
