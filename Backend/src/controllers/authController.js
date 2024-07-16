@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const sendEmail = require('../utils/sendEmail');
+const accountCreationTemplate = require('../templates/accountCreationTemplate');
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
