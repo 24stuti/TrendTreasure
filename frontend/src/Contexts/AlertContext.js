@@ -24,7 +24,7 @@ export const AlertProvider = ({ children }) => {
             }
             return currentAlert;
           });
-        }, 10000);
+        }, 5000);
       }
     }
   };

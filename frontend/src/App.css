@@ -6,3 +6,6 @@
 h2 {
   margin-bottom: 20px;
 }
+:root {
+  --main-bg-color: #f0e6ff; /* A light mix of blue, pink, and purple */
+}

@@ -125,6 +125,10 @@ import Address from './Components/Address';
 import OrderSummary from './Components/OrderSummary';
 import Profile from './Components/Profile';
 import CreateOrder from './Components/CreateOrder';
+import ContactUs from './Components/ContactUs';
+import FAQs from './Components/FAQs';
+import Returns from './Components/Returns';
+import TrackOrder from './Components/TrackOrder';
 
 
 const App = () => {
@@ -144,10 +148,13 @@ const App = () => {
           <Route path="/admin" element={<Admin />}/>
           <Route path="/checkout" element={<Checkout/>}/>
           <Route path="/address" element={<Address/>}/>
-          <Route path="/" element={<Profile/>} />
-          
+          <Route path="/" element={<Profile/>} />       
           <Route path="/order/:id" element={<OrderSummary />} />
           <Route path="/create-order" element={<CreateOrder />}/>
+          <Route path='/contact-us' element={<ContactUs/>}/>
+          <Route path='/faqs' element={<FAQs/>}/>
+          <Route path='/returns' element={<Returns/>}/>
+          <Route path='/track-order' element={<TrackOrder/>}/>
         </Routes>
         </AlertProvider>
     </Router>

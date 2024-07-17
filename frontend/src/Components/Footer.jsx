@@ -8,10 +8,10 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Customer Service</h3>
           <ul>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Returns</a></li>
-            <li><a href="#">Track Order</a></li>
+            <li><a href="contact-us">Contact Us</a></li>
+            <li><a href="faqs">FAQs</a></li>
+            <li><a href="returns">Returns</a></li>
+            <li><a href="track-order">Track Order</a></li>
           </ul>
         </div>
         

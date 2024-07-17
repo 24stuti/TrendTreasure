@@ -1,41 +1,40 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate hook
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import './Header.css'; // Import your header styles
+import './Header.css';
 import Profile from './Profile';
 
 const Header = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login'); // Navigate to login page
+    navigate('/login');
   };
 
   const handleCartClick = () => {
-    navigate('/cart'); // Navigate to cart page
+    navigate('/cart');
   };
 
   const handleLogoClick = () => {
-    navigate('/'); // Navigate to home page
+    navigate('/');
   };
 
   return (
     <header className="header">
       <div className="header-top">
-        <div className="logo">
-          <Link to="/" onClick={handleLogoClick}>
-            <img src="/images/logo.png" alt="TrendTreasure Logo" className='logo-image' />
-          </Link>
+        <div className="logo" onClick={handleLogoClick}>
+          <img src="/images/logo.png" alt="TrendTreasure Logo" className="logo-image" />
         </div>
         <nav className="header-bottom">
           <ul>
-            <li><a href="/men">Men</a></li>
-            <li><a href="/women">Women</a></li>
-            <li><a href="/kids">Kids</a></li>
-            <li><a href="/electronics">Electronics</a></li>
-            <li><a href="/footwear">Footwear</a></li>
-            <li><a href="/beauty">Beauty</a></li>
+            <li><Link to="/category/Men">Men</Link></li>
+            <li><Link to="/category/Women">Women</Link></li>
+            <li><Link to="/category/Kids">Kids</Link></li>
+            <li><Link to="/category/Electronics">Electronics</Link></li>
+            <li><Link to="/category/Footwear">Footwear</Link></li>
+            <li><Link to="/category/Beauty">Beauty</Link></li>
+            <li><Link to="/category/Jewellery">Jewellery</Link></li>
           </ul>
         </nav>
         <div className="search-bar">

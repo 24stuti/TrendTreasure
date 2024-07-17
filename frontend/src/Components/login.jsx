@@ -65,11 +65,11 @@ const Login = () => {
   const handleToggle = () => setIsLogin(!isLogin);
 
   const handleLoginSuccess = (email, name, role, isAdmin) => {
-    showAlert(`Logged in successfully as' ${email}`, 'success')
+    showAlert(`Logged in successfully as ${email}`, 'success');
     console.log('Logged in successfully as', email, 'Role:', role, 'Is Admin:', isAdmin);
     setIsAuth(true);
     localStorage.setItem('user', JSON.stringify({ email, name, role, isAdmin }));
-    
+
     const redirectUrl = location.state?.from || (isAdmin ? '/admin' : '/');
     navigate(redirectUrl);
   };
@@ -99,9 +99,6 @@ const Login = () => {
     } catch (error) {
       showAlert(`Login failed: ${error.response?.data?.message || 'An unknown error occurred'}`, 'error');
       console.error('Login Error:', error);
-      // setTimeout(() => {
-      //   setErrors({});
-      // }, 5000);
     }
   };
 
@@ -114,11 +111,8 @@ const Login = () => {
       await axios.post(`${config.BASE_URL}users/register`, { email, password, name });
       await handleLogin();
     } catch (error) {
-      showAlert(`signup failed: ${error.response?.data?.message || 'An unknown error occurred' }`, 'error');
+      showAlert(`Signup failed: ${error.response?.data?.message || 'An unknown error occurred'}`, 'error');
       console.error('Signup Error:', error);
-      // setTimeout(() => {
-      //   setErrors({});
-      // }, 5000);
     }
   };
 
@@ -140,10 +134,19 @@ const Login = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsAuth(false);
+    showAlert('Logged out successfully', 'success');
+    navigate('/login');
+  };
+
   if (isAuth) {
     return (
       <div>
         <h2>You are already logged in</h2>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     );
   }
