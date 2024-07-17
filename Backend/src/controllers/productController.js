@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
+const User = require('../models/User')
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -69,11 +70,63 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    add product to wishlist
+// @access  private
+
+const addToWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const product = await Product.findById(req.params.productId);
+
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  if (user.wishlist.includes(product._id)) {
+    res.status(400);
+    throw new Error('Product already in wishlist');
+  }
+
+  user.wishlist.push(product._id);
+  await user.save();
+
+  res.status(200).json({ message: 'Product added to wishlist' });
+});
+
+
+// @desc    remove product from wishlist
+// @access  private
+const removeFromWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const productId = req.params.productId;
+
+  user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+
+  await user.save();
+
+  res.status(200).json({ message: 'Product removed from wishlist' });
+});
+
+// @desc    remove product from wishlist
+// @access  private
+const getWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).populate('wishlist');
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  res.status(200).json(user.wishlist);
+});
 
 module.exports = {
   getProducts,
   getProductById,
   getProductsByCategory,
   addProduct,
-  deleteProduct
+  deleteProduct,
+  addToWishlist,
+  removeFromWishlist,
+  getWishlist
 };

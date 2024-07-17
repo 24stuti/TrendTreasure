@@ -6,6 +6,9 @@ const {
   getProductsByCategory,
   addProduct,
   deleteProduct,
+  addToWishlist,
+  removeFromWishlist,
+  getWishlist
 } = require('../controllers/productController');
 
 const router = express.Router();
@@ -15,5 +18,9 @@ router.route('/addProduct').post(protect, admin, addProduct);
 router.route('/listProducts/:id').get(getProductById);
 router.route('/deleteProduct/:id').delete(protect, admin, deleteProduct);
 router.route('/category/:categoryName').get(getProductsByCategory);
+router.post('/wishlist/:productId', protect, addToWishlist);
+router.delete('/wishlist/:productId', protect, removeFromWishlist);
+router.get('/wishlist', protect, getWishlist);
+
 
 module.exports = router;
