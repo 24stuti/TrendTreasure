@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const compression = require('compression');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const bodyParser = require('body-parser');
