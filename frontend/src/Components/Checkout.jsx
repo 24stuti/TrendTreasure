@@ -1,4 +1,3 @@
-// src/components/Checkout.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -33,6 +32,10 @@ const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { showAlert } = useAlert();
+
+  const handleApplyCoupon = (code) => {
+    console.log(`Applying coupon: ${code}`);
+  };
 
   useEffect(() => {
     if (location.state && location.state.address) {

@@ -17,6 +17,7 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
+    const { setAlert } = useAlert()
 
     useEffect(() => {
         const fetchCategories = async () => {

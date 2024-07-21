@@ -147,25 +147,65 @@
   color: #ff4d4d;
 }
 
+/* ... (existing styles) ... */
+
 .empty-cart {
   text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 2rem;
+  padding: 2rem;
 }
 
 .continue-shopping-button {
   display: inline-block;
-  background-color: #8e44ad;
-  color: white;
   padding: 10px 20px;
+  font-size: 16px;
   text-decoration: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
   border-radius: 5px;
-  font-size: 1rem;
-  margin-top: 1rem;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.continue-shopping-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: all 0.5s;
 }
 
 .continue-shopping-button:hover {
-  background-color:#6c3483;
+  background-color: #45a049;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.continue-shopping-button:hover:before {
+  left: 100%;
+}
+
+.continue-shopping-button.animated {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
