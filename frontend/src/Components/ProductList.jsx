@@ -5,6 +5,7 @@ import Footer from './Footer';
 import axios from 'axios';
 import { useAlert } from '../Contexts/AlertContext';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const config = require('../Config/Constant');
 
@@ -13,9 +14,9 @@ const ProductList = () => {
   const navigate = useNavigate();
   const [quantities, setQuantities] = useState({});
   const [products, setProducts] = useState([]);
-  const [addToCartMessage, setAddToCartMessage] = useState('');
+  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { showAlert } = useAlert()
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,12 +25,26 @@ const ProductList = () => {
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
-        showAlert("Error fetching products", "error")
+        showAlert("Error fetching products", "error");
         console.error('Error fetching products:', error);
         setLoading(false);
       }
     };
+    const fetchWishlist = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${config.BASE_URL}products/wishlist`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setWishlist(response.data.map(item => item._id));
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+      }
+    };
     fetchProducts();
+    fetchWishlist();
   }, [categoryName]);
 
   useEffect(() => {
@@ -90,6 +105,37 @@ const ProductList = () => {
     }
   };
 
+  const handleWishlist = async (productId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showAlert("No token found. Please log in again!", "error");
+        throw new Error('No token found. Please log in again.');
+      }
+
+      if (wishlist.includes(productId)) {
+        await axios.delete(`${config.BASE_URL}products/wishlist/${productId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setWishlist(wishlist.filter(id => id !== productId));
+        showAlert('Removed from wishlist', 'success');
+      } else {
+        await axios.post(`${config.BASE_URL}products/wishlist/${productId}`, {}, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setWishlist([...wishlist, productId]);
+        showAlert('Added to wishlist', 'success');
+      }
+    } catch (error) {
+      showAlert('Error updating wishlist', 'error');
+      console.error('Error updating wishlist:', error);
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -117,10 +163,17 @@ const ProductList = () => {
                 <span>{quantities[product.name]}</span>
                 <button onClick={() => handleIncrement(product.name)}>+</button>
               </div>
-              <button className="add-to-cart" onClick={() => handleAddToCart(product)}>
-                Add to Cart
-              </button>
-              {addToCartMessage && <div className="add-to-cart-message">{addToCartMessage}</div>}
+              <div className="action-buttons">
+                <button className="add-to-cart" onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </button>
+                <button 
+                  className={`wishlist-button ${wishlist.includes(product._id) ? 'in-wishlist' : ''}`} 
+                  onClick={() => handleWishlist(product._id)}
+                >
+                  {wishlist.includes(product._id) ? <FaHeart /> : <FaRegHeart />}
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -129,6 +129,11 @@ import ContactUs from './Components/ContactUs';
 import FAQs from './Components/FAQs';
 import Returns from './Components/Returns';
 import TrackOrder from './Components/TrackOrder';
+import Wishlist from './Components/Wishlist';
+import OurStory from './Components/OurStory';
+import PrivacyPolicy from './Components/PrivacyPolicy';
+import TermsOfUse from './Components/TermsOfUse';
+import CouponCode from './Components/CouponCode';
 
 
 const App = () => {
@@ -151,10 +156,15 @@ const App = () => {
           <Route path="/" element={<Profile/>} />       
           <Route path="/order/:id" element={<OrderSummary />} />
           <Route path="/create-order" element={<CreateOrder />}/>
+          <Route path='/wishlist' element={<Wishlist/>}/>
           <Route path='/contact-us' element={<ContactUs/>}/>
           <Route path='/faqs' element={<FAQs/>}/>
           <Route path='/returns' element={<Returns/>}/>
           <Route path='/track-order' element={<TrackOrder/>}/>
+          <Route path='/our-story' element={<OurStory/>}/>
+          <Route path='/privacy-policy' element={<PrivacyPolicy/>}/>
+          <Route path='/terms' element={<TermsOfUse/>}/>
+          <Route path='/coupons' element={<CouponCode/>}/>
         </Routes>
         </AlertProvider>
     </Router>

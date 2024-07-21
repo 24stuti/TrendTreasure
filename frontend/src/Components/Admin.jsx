@@ -16,6 +16,7 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
+    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -23,7 +24,7 @@ const Admin = () => {
                 const response = await fetch(`${config.BASE_URL}category/fetchCategories`);
                 if (response.ok) {
                     const data = await response.json();
-                    setCategories(data); // Assuming the API returns an array of category objects
+                    setCategories(data);
                 } else {
                     console.error('Failed to fetch categories');
                 }
@@ -35,13 +36,14 @@ const Admin = () => {
         fetchCategories();
     }, []);
 
-    const handleImageUpload = (e, setImage) => {
+    const handleImageUpload = (e) => {
         const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(reader.result);
-        };
         if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result.split(',')[1];
+                setProductImage(base64String);
+            };
             reader.readAsDataURL(file);
         }
     };
@@ -69,21 +71,40 @@ const Admin = () => {
                 })
             });
             if (response.ok) {
-                console.log("Product added successfully");
-                // You may want to update state or show a success message
+                showAlert('Product added successfully!', 'success');
+                // Reset form fields
+                setProductName('');
+                setProductDescription('');
+                setProductPrice('');
+                setProductCategory('');
+                setProductImage('');
+                setProductInStock(false);
+                setProductStockCount(0);
             } else {
                 const data = await response.json();
-                console.error(data.message);
+                showAlert(data.message || 'Failed to add product', 'error');
             }
         } catch (error) {
-            console.error('Error adding product:', error);
+            showAlert('Error adding product', 'error');
         }
+    };
+
+    const showAlert = (message, type) => {
+        setAlert({ show: true, message, type });
+        setTimeout(() => {
+            setAlert({ show: false, message: '', type: '' });
+        }, 3000);
     };
 
     return (
         <>
             <Header />
             <div className="admin-container">
+                {alert.show && (
+                    <div className={`alert alert-${alert.type}`}>
+                        {alert.message}
+                    </div>
+                )}
                 <div className="crud-column">
                     <label>Product Name</label>
                     <input type="text" placeholder="Product Name" value={productName} onChange={(e) => setProductName(e.target.value)} />
@@ -103,7 +124,7 @@ const Admin = () => {
                     </select>
                     
                     <label>Product Image</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, setProductImage)} />
+                    <input type="file" onChange={handleImageUpload} />
                     
                     <div className="stock-checkbox">
                         <label htmlFor="instock">In Stock:</label>
@@ -122,4 +143,3 @@ const Admin = () => {
 };
 
 export default Admin;
-

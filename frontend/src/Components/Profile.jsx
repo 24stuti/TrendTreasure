@@ -33,10 +33,6 @@ const Profile = () => {
     navigate('/wishlist'); // Navigate to the Wishlist component
   };
 
-  const handleGiftCardsClick = () => {
-    navigate('/gift-cards'); // Navigate to the Gift Cards component
-  };
-
   const handleContactUsClick = () => {
     navigate('/contact-us'); // Navigate to the Contact Us component
   };
@@ -69,7 +65,6 @@ const Profile = () => {
       <ul>
         <li><button onClick={handleOrdersClick}>Orders</button></li>
         <li><button onClick={handleWishlistClick}>Wishlist</button></li>
-        <li><button onClick={handleGiftCardsClick}>Gift Cards</button></li>
         <li><button onClick={handleContactUsClick}>Contact Us</button></li>
         <li><button onClick={handleCouponsClick}>Coupons</button></li>
         <li><button onClick={handleAddressClick}>Address</button></li>
