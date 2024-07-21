@@ -101,7 +101,7 @@ const Cart = () => {
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
 
-  const subtotal = cart ? cart.items.reduce((acc, item) => acc + item.product.price * item.quantity, 0) : 0;
+  const subtotal = cart ? cart.items?.reduce((acc, item) => acc + item.product.price * item.quantity, 0) : 0;
   const total = subtotal - couponDiscount;
 
   return (

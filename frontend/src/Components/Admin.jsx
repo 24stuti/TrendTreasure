@@ -17,7 +17,7 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
-    const { setAlert } = useAlert()
+    const { showAlert } = useAlert()
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -85,12 +85,12 @@ const Admin = () => {
         }
     };
 
-    const showAlert = (message, type) => {
-        setAlert({ show: true, message, type });
-        setTimeout(() => {
-            setAlert({ show: false, message: '', type: '' });
-        }, 3000);
-    };
+    // const showAlert = (message, type) => {
+    //     setAlert({ show: true, message, type });
+    //     setTimeout(() => {
+    //         setAlert({ show: false, message: '', type: '' });
+    //     }, 3000);
+    // };
 
     return (
         <>
