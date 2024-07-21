@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header.jsx';
 import Footer from './Footer';
+import { useAlert } from '../Contexts/AlertContext';
 
 const config = require('../Config/Constant');
 
@@ -16,6 +17,8 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
+    const { showAlert } = useAlert()
+
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -26,9 +29,11 @@ const Admin = () => {
                     setCategories(data); // Assuming the API returns an array of category objects
                 } else {
                     console.error('Failed to fetch categories');
+                    showAlert("Failed to fetch categories", "error")
                 }
             } catch (error) {
                 console.error('Error fetching categories:', error);
+                showAlert("Failed to fetch categories", "error")
             }
         };
 
@@ -70,13 +75,15 @@ const Admin = () => {
             });
             if (response.ok) {
                 console.log("Product added successfully");
-                // You may want to update state or show a success message
+                showAlert("Product added successfully", "success")
             } else {
                 const data = await response.json();
                 console.error(data.message);
+                showAlert("Error adding product", "error")
             }
         } catch (error) {
             console.error('Error adding product:', error);
+            showAlert("Error adding product", "error")
         }
     };
 
