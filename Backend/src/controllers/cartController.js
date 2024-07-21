@@ -7,7 +7,7 @@ const Product = require('../models/Product');
 // @access  Private
 const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-
+  cart.items = cart.items.filter(item => item.product !== null);
   if (cart) {
     res.json(cart);
   } else {
