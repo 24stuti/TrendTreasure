@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header.jsx';
 import Footer from './Footer';
+import { useAlert } from '../Contexts/AlertContext';
 
 const config = require('../Config/Constant');
 
@@ -16,7 +17,6 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
-    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -27,9 +27,11 @@ const Admin = () => {
                     setCategories(data);
                 } else {
                     console.error('Failed to fetch categories');
+                    showAlert("Failed to fetch categories", "error")
                 }
             } catch (error) {
                 console.error('Error fetching categories:', error);
+                showAlert("Failed to fetch categories", "error")
             }
         };
 
@@ -71,21 +73,14 @@ const Admin = () => {
                 })
             });
             if (response.ok) {
-                showAlert('Product added successfully!', 'success');
-                // Reset form fields
-                setProductName('');
-                setProductDescription('');
-                setProductPrice('');
-                setProductCategory('');
-                setProductImage('');
-                setProductInStock(false);
-                setProductStockCount(0);
+                console.log("Product added successfully");
+                // You may want to update state or show a success message
             } else {
                 const data = await response.json();
-                showAlert(data.message || 'Failed to add product', 'error');
+                console.error(data.message);
             }
         } catch (error) {
-            showAlert('Error adding product', 'error');
+            console.error('Error adding product:', error);
         }
     };
 

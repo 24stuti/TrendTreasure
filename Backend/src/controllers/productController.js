@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
 const User = require('../models/User')
+const compressImage = require('../utils/compressImage');
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -42,6 +43,7 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const addProduct = asyncHandler(async (req, res) => {
   const { name, price, description, category, countInStock, image } = req.body;
+  const compressedImage = await compressImage(Buffer.from(image, 'base64'));
 
   const product = new Product({
     name,
@@ -49,7 +51,7 @@ const addProduct = asyncHandler(async (req, res) => {
     description,
     category,
     countInStock,
-    image
+    image:compressedImage
   });
 
   const createdProduct = await product.save();
