@@ -102,7 +102,7 @@ const Cart = () => {
   if (error) return <div className="error">{error}</div>;
 
   const subtotal = cart ? cart.items?.reduce((acc, item) => acc + item.product.price * item.quantity, 0) : 0;
-  const total = subtotal - couponDiscount;
+  const total = subtotal - (subtotal * couponDiscount);
 
   return (
     <div>
@@ -145,11 +145,11 @@ const Cart = () => {
                 </div>
               </div>
             ))}
-            <CouponCode onApplyCoupon={handleApplyCoupon} />
+            <CouponCode onApplyCoupon={handleApplyCoupon} totalAmount={subtotal} />
             <div className="cart-total">
-              <h3>Subtotal: ₹{subtotal.toFixed(2)}</h3>
-              {couponDiscount > 0 && <h3>Discount: -₹{couponDiscount.toFixed(2)}</h3>}
-              <h3>Total: ₹{total.toFixed(2)}</h3>
+              <h3>MRP: ₹{subtotal.toFixed(2)}</h3>
+              {couponDiscount > 0 && <h3>Coupon Discount: -₹{(subtotal * couponDiscount).toFixed(2)}</h3>}
+              <h3 id= "total-amount">Total Amount: ₹{total.toFixed(2)}</h3>
             </div>
             <Link to="/Address" className="proceed-button">
               Proceed to Checkout

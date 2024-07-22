@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingCart, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import Profile from './Profile';
+import axios from 'axios';
+const config = require('../Config/Constant');
+
 
 const Header = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -18,6 +22,17 @@ const Header = () => {
 
   const handleLogoClick = () => {
     navigate('/');
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`${config.BASE_URL}products/search`, {
+        params: { query: searchQuery },
+      });
+      navigate('/search-results', { state: { products: response.data } });
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
   };
 
   return (
@@ -38,8 +53,13 @@ const Header = () => {
           </ul>
         </nav>} */}
         <div className="search-bar">
-          <input type="text" placeholder="Search for products, brands and more" />
-          <button type="button">Search</button>
+          <input
+            type="text"
+            placeholder="Search for products, brands and more"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="button" onClick={handleSearch}>Search</button>
         </div>
         <div className="header-icons">
           <div className="header-icon" onClick={handleLoginClick}>
