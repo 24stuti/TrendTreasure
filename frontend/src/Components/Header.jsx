@@ -26,7 +26,7 @@ const Header = () => {
         <div className="logo" onClick={handleLogoClick}>
           <img src="/images/logo.png" alt="TrendTreasure Logo" className="logo-image" />
         </div>
-        <nav className="header-bottom">
+        {/* {<nav className="header-bottom">
           <ul>
             <li><Link to="/category/Men">Men</Link></li>
             <li><Link to="/category/Women">Women</Link></li>
@@ -36,7 +36,7 @@ const Header = () => {
             <li><Link to="/category/Beauty">Beauty</Link></li>
             <li><Link to="/category/Jewellery">Jewellery</Link></li>
           </ul>
-        </nav>
+        </nav>} */}
         <div className="search-bar">
           <input type="text" placeholder="Search for products, brands and more" />
           <button type="button">Search</button>
