@@ -122,6 +122,27 @@ const getWishlist = asyncHandler(async (req, res) => {
   res.status(200).json(user.wishlist);
 });
 
+// @desc search products as per query provided
+//@access public
+const searchProducts = asyncHandler(async (req, res) => {
+  try {
+    const { query } = req.query;
+    const products = await Product.find({
+      $or: [
+        { name: new RegExp(query, 'i') },
+        { category: new RegExp(query, 'i') },
+        { description: new RegExp(query, 'i')}
+      ]
+    });
+    if(!products && products.length <= 0){
+      res.status(404).json({ message: 'products not found, Please search something else'})
+    }
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+})
+
 module.exports = {
   getProducts,
   getProductById,
@@ -130,5 +151,6 @@ module.exports = {
   deleteProduct,
   addToWishlist,
   removeFromWishlist,
-  getWishlist
+  getWishlist,
+  searchProducts
 };
