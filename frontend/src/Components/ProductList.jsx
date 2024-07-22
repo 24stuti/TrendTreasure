@@ -9,27 +9,30 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const config = require('../Config/Constant');
 
-const ProductList = () => {
+const ProductList = ({ products: initialProducts = [] }) => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [quantities, setQuantities] = useState({});
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(initialProducts);
   const [wishlist, setWishlist] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        showAlert("Error fetching products", "error");
-        console.error('Error fetching products:', error);
-        setLoading(false);
-      }
-    };
+    if (!initialProducts.length && categoryName) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
+          setProducts(response.data);
+          setLoading(false);
+        } catch (error) {
+          showAlert("Sorry, No Products found", "info");
+          console.error('Error fetching products:', error);
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+    }
     const fetchWishlist = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -43,9 +46,8 @@ const ProductList = () => {
         console.error('Error fetching wishlist:', error);
       }
     };
-    fetchProducts();
     fetchWishlist();
-  }, [categoryName]);
+  }, [categoryName, initialProducts.length]);
 
   useEffect(() => {
     const initialQuantities = {};
@@ -90,11 +92,7 @@ const ProductList = () => {
       );
   
       if (response.status === 201) {
-        //setAddToCartMessage(`Added ${quantities[product.name]} ${product.name}(s) to cart.`);
         showAlert(`Added ${quantities[product.name]} ${product.name}(s) to cart.`, 'success');
-        // setTimeout(() => {
-        //   setAddToCartMessage('');
-        // }, 3000);
       } else {
         showAlert('Error adding to cart!', 'error');
         console.error('Error adding to cart:', response.data.error);
@@ -136,15 +134,21 @@ const ProductList = () => {
     }
   };
 
+  if(!products && products.length<=0){
+    setLoading(false)
+    showAlert("Sorry, No Products found", "info");
+  }
   if (loading) {
     return <p>Loading...</p>;
   }
+
+  
 
   return (
     <>
       <Header />
       <div className="category-container">
-        <h2>Explore {categoryName} Essentials - Your Next Favorite Finds!</h2>
+        <h2> {categoryName ? `Explore ${categoryName} Essentials : - Your Next Favorite Finds!`: `Found ${products?.length} products`} </h2>
         <div className="item-list">
           {products.map((product, index) => (
             <div key={index} className="item">

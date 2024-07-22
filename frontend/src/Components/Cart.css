@@ -143,7 +143,7 @@
 .loading, .error, .empty-cart {
   text-align: center;
   font-size: 1.2rem;
-  color: #666;
+  color: #666666;
   margin-top: 2rem;
 }
 
@@ -173,6 +173,7 @@
 .continue-shopping-button:hover {
   background-color:#6c3483;
 }
-#total-amount {
-
+.loading {
+  background-color: aquamarine;
+  color: brown;
 }
