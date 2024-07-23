@@ -8,7 +8,8 @@ const {
   deleteProduct,
   addToWishlist,
   removeFromWishlist,
-  getWishlist
+  getWishlist,
+  searchProducts
 } = require('../controllers/productController');
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.route('/category/:categoryName').get(getProductsByCategory);
 router.post('/wishlist/:productId', protect, addToWishlist);
 router.delete('/wishlist/:productId', protect, removeFromWishlist);
 router.get('/wishlist', protect, getWishlist);
+router.get('/search', searchProducts)
 
 
 module.exports = router;

@@ -9,6 +9,7 @@
   max-width: 300px;
   margin: auto;
   animation: fadeIn 0.5s ease-out;
+  z-index: 1003; /* Ensure it is above other elements */
 }
 
 @keyframes fadeIn {
@@ -21,12 +22,14 @@
   font-size: 22px;
   margin-bottom: 5px;
   text-align: center;
+  margin-top: -30px;
 }
 
 .profile-container p {
-  color: #555;
+  color: #2a2369;
   font-size: 16px;
   margin-bottom: 10px;
+  margin-top: -30px;
   text-align: center;
 }
 
@@ -60,7 +63,7 @@
   left: 50%;
   width: 5px;
   height: 5px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(95, 167, 196, 0.5);
   opacity: 0;
   border-radius: 100%;
   transform: scale(1, 1) translate(-50%);
@@ -87,9 +90,9 @@
 }
 
 .profile-container button:hover {
-  background-color: #e0e0e0;
+  background-color: #66babe;
   transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(159, 104, 104, 0.1);
 }
 
 .profile-container button:active {
@@ -103,7 +106,8 @@
 }
 
 .profile-container li:last-child button:hover {
-  background-color: #ff5252;
+  background-color: #34d7a1;
+  color: blue;
 }
 
 @media (max-width: 480px) {
