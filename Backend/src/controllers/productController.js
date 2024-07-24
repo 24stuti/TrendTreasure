@@ -28,16 +28,13 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   GET /api/products/category/:category
 // @access  Public
 const getProductsByCategory = asyncHandler(async (req, res) => {
-  const { categoryName } = req.params;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-  const skip = (page - 1) * limit;
+  const category = req.params.categoryName;
+  const products = await Product.find({ category: category });
 
-  try {
-    const products = await Product.find({ category: categoryName }).skip(skip).limit(limit);
+  if (products.length > 0) {
     res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch products' });
+  } else {
+    res.status(404).json({ message: 'No products found in this category' });
   }
 });
 
@@ -128,18 +125,21 @@ const getWishlist = asyncHandler(async (req, res) => {
 // @desc search products as per query provided
 //@access public
 const searchProducts = asyncHandler(async (req, res) => {
-  const query = req.query.query;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-  const skip = (page - 1) * limit;
-
   try {
-    const products = await Product.find({ name: { $regex: query, $options: 'i' } })
-                                  .skip(skip)
-                                  .limit(limit);
+    const { query } = req.query;
+    const products = await Product.find({
+      $or: [
+        { name: new RegExp(query, 'i') },
+        { category: new RegExp(query, 'i') },
+        { description: new RegExp(query, 'i')}
+      ]
+    });
+    if(!products && products.length <= 0){
+      res.status(404).json({ message: 'products not found, Please search something else'})
+    }
     res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch search results' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 })
 
