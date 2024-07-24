@@ -7,7 +7,6 @@ import Profile from './Profile';
 import axios from 'axios';
 const config = require('../Config/Constant');
 
-
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
@@ -27,9 +26,9 @@ const Header = () => {
   const handleSearch = async () => {
     try {
       const response = await axios.get(`${config.BASE_URL}products/search`, {
-        params: { query: searchQuery },
+        params: { query: searchQuery, page: 1, limit: 12 },
       });
-      navigate('/search-results', { state: { products: response.data } });
+      navigate('/search-results', { state: { products: response.data, query: searchQuery, page: 1 } });
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -41,17 +40,6 @@ const Header = () => {
         <div className="logo" onClick={handleLogoClick}>
           <img src="/images/logo.png" alt="TrendTreasure Logo" className="logo-image" />
         </div>
-        {/* {<nav className="header-bottom">
-          <ul>
-            <li><Link to="/category/Men">Men</Link></li>
-            <li><Link to="/category/Women">Women</Link></li>
-            <li><Link to="/category/Kids">Kids</Link></li>
-            <li><Link to="/category/Electronics">Electronics</Link></li>
-            <li><Link to="/category/Footwear">Footwear</Link></li>
-            <li><Link to="/category/Beauty">Beauty</Link></li>
-            <li><Link to="/category/Jewellery">Jewellery</Link></li>
-          </ul>
-        </nav>} */}
         <div className="search-bar">
           <input
             type="text"

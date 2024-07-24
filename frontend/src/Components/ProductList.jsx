@@ -9,7 +9,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const config = require('../Config/Constant');
 
-const ProductList = ({ products: initialProducts = [] }) => {
+const ProductList = ({ products: initialProducts = [], loadMore }) => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [quantities, setQuantities] = useState({});
@@ -17,37 +17,6 @@ const ProductList = ({ products: initialProducts = [] }) => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
-
-  useEffect(() => {
-    if (!initialProducts.length && categoryName) {
-      const fetchProducts = async () => {
-        try {
-          const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
-          setProducts(response.data);
-          setLoading(false);
-        } catch (error) {
-          showAlert("Sorry, No Products found", "info");
-          console.error('Error fetching products:', error);
-          setLoading(false);
-        }
-      };
-      fetchProducts();
-    }
-    const fetchWishlist = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${config.BASE_URL}products/wishlist`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setWishlist(response.data.map(item => item._id));
-      } catch (error) {
-        console.error('Error fetching wishlist:', error);
-      }
-    };
-    fetchWishlist();
-  }, [categoryName, initialProducts.length]);
 
   useEffect(() => {
     const initialQuantities = {};
@@ -134,21 +103,15 @@ const ProductList = ({ products: initialProducts = [] }) => {
     }
   };
 
-  if(!products && products.length<=0){
-    setLoading(false)
-    showAlert("Sorry, No Products found", "info");
-  }
   if (loading) {
     return <p>Loading...</p>;
   }
-
-  
 
   return (
     <>
       <Header />
       <div className="category-container">
-        <h2> {categoryName ? `Explore ${categoryName} Essentials : - Your Next Favorite Finds!`: `Found ${products?.length} products`} </h2>
+        <h2>{categoryName ? `Explore ${categoryName} Essentials : Your Next Favorite Finds!` : `Found ${products.length} products`}</h2>
         <div className="item-list">
           {products.map((product, index) => (
             <div key={index} className="item">
@@ -181,6 +144,11 @@ const ProductList = ({ products: initialProducts = [] }) => {
             </div>
           ))}
         </div>
+        {products.length > 0 && (
+          <button className="load-more-button" onClick={loadMore}>
+            Load More
+          </button>
+        )}
         <button className="go-to-cart-button" onClick={() => navigate('/cart')}>Go to Cart</button>
       </div>
       <Footer />
