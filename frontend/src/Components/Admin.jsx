@@ -17,7 +17,7 @@ const Admin = () => {
     const [productInStock, setProductInStock] = useState(false);
     const [productStockCount, setProductStockCount] = useState(0);
     const [categories, setCategories] = useState([]);
-    const { showAlert } = useAlert()
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -28,11 +28,11 @@ const Admin = () => {
                     setCategories(data);
                 } else {
                     console.error('Failed to fetch categories');
-                    showAlert("Failed to fetch categories", "error")
+                    showAlert("Failed to fetch categories", "error");
                 }
             } catch (error) {
                 console.error('Error fetching categories:', error);
-                showAlert("Failed to fetch categories", "error")
+                showAlert("Failed to fetch categories", "error");
             }
         };
 
@@ -74,33 +74,29 @@ const Admin = () => {
                 })
             });
             if (response.ok) {
-                console.log("Product added successfully");
-                // You may want to update state or show a success message
+                showAlert("Product added successfully", "success");
+                // Reset form fields
+                setProductName('');
+                setProductDescription('');
+                setProductPrice('');
+                setProductCategory('');
+                setProductImage('');
+                setProductInStock(false);
+                setProductStockCount(0);
             } else {
                 const data = await response.json();
-                console.error(data.message);
+                showAlert(data.message || "Failed to add product", "error");
             }
         } catch (error) {
             console.error('Error adding product:', error);
+            showAlert("An error occurred while adding the product", "error");
         }
     };
-
-    // const showAlert = (message, type) => {
-    //     setAlert({ show: true, message, type });
-    //     setTimeout(() => {
-    //         setAlert({ show: false, message: '', type: '' });
-    //     }, 3000);
-    // };
 
     return (
         <>
             <Header />
             <div className="admin-container">
-                {alert.show && (
-                    <div className={`alert alert-${alert.type}`}>
-                        {alert.message}
-                    </div>
-                )}
                 <div className="crud-column">
                     <label>Product Name</label>
                     <input type="text" placeholder="Product Name" value={productName} onChange={(e) => setProductName(e.target.value)} />
