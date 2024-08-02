@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useAlert } from '../Contexts/AlertContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import Loader from './Loader';
 
 const config = require('../Config/Constant');
 
@@ -22,6 +23,7 @@ const ProductList = ({ products: initialProducts = [] }) => {
     if (!initialProducts.length && categoryName) {
       const fetchProducts = async () => {
         try {
+          setLoading(true);
           const response = await axios.get(`${config.BASE_URL}products/category/${categoryName}`);
           setProducts(response.data);
           setLoading(false);
@@ -134,15 +136,9 @@ const ProductList = ({ products: initialProducts = [] }) => {
     }
   };
 
-  if(!products && products.length<=0){
-    setLoading(false)
-    showAlert("Sorry, No Products found", "info");
-  }
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
-
-  
 
   return (
     <>

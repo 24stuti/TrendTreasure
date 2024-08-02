@@ -4,6 +4,7 @@ import axios from 'axios';
 import './Wishlist.css';
 import Header from './Header';
 import Footer from './Footer';
+import Loader from './Loader';
 
 const config = require('../Config/Constant');
 
@@ -63,7 +64,9 @@ const Wishlist = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) {
+    return <Loader />;
+  }
   if (error) return <div className="error">{error}</div>;
 
   return (
